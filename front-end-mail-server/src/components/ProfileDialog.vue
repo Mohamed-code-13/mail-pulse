@@ -1,28 +1,32 @@
 <template>
   <dialog open>
-    <h2>Settings</h2>
+    <h2>Profile</h2>
 
-    <button @click="closeCompose" id="logout-btn" type="button">
-      <span class="material-symbols-outlined"> logout </span>
-      Logout
-    </button>
+    <div class="content">
+      <label>Name:</label>
+      <h3>{{ name }}</h3>
 
-    <button @click="closeCompose" id="delete-btn" type="button">
-      <span class="material-symbols-outlined"> delete_forever </span>
-      Delete Account
-    </button>
+      <label>Email:</label>
+      <h3>{{ email }}</h3>
+    </div>
 
     <button @click="closeCompose" id="close-btn" type="button">
-      <span class="material-symbols-outlined"> close </span>
-      Cancel
+      <span class="material-symbols-outlined"> cancel </span>
+      Close
     </button>
   </dialog>
 </template>
 
 <script>
-export default {}
+import { ref } from 'vue'
+export default {
+  setup() {
+    const name = ref('mohamed')
+    const email = ref('mohamed@test.com')
+    return { name, email }
+  }
+}
 </script>
-
 <style scoped>
 dialog {
   position: absolute;
@@ -41,6 +45,14 @@ h2 {
   margin-bottom: 14px;
   padding-bottom: 4px;
 }
+.content {
+  padding: 10px;
+  text-align: left;
+}
+label,
+h3 {
+  margin: 10px 0;
+}
 button {
   display: flex;
   justify-content: space-evenly;
@@ -53,14 +65,6 @@ button {
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
-}
-#logout-btn {
-  color: white;
-  background: gray;
-}
-#delete-btn {
-  color: white;
-  background: red;
 }
 #close-btn {
   color: green;
