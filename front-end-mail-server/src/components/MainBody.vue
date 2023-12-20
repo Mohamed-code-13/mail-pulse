@@ -23,9 +23,9 @@ export default {
   setup() {
     const store = useStore()
 
-    const isComposeDialogOpen = computed(() => store.state.dialogs.isComposeDialogOpen)
-    const isProfileDialogOpen = computed(() => store.state.dialogs.isProfileDialogOpen)
-    const isSettingsDialogOpen = computed(() => store.state.dialogs.isSettingsDialogOpen)
+    const isComposeDialogOpen = computed(() => store.getters.isComposeDialogOpen)
+    const isProfileDialogOpen = computed(() => store.getters.isProfileDialogOpen)
+    const isSettingsDialogOpen = computed(() => store.getters.isSettingsDialogOpen)
 
     return {
       isComposeDialogOpen,
