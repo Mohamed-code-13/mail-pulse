@@ -2,6 +2,7 @@ package com.mohamedcode.mailpulse.repositories;
 
 import com.mohamedcode.mailpulse.exceptions.CustomAuthException;
 import com.mohamedcode.mailpulse.models.UserModel;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,13 +25,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Integer create(String name, String email, String password) throws CustomAuthException {
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(10));
         try {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, name);
                 ps.setString(2, email);
-                ps.setString(3, password);
+                ps.setString(3, hashedPassword);
                 return ps;
             }, keyHolder);
 
@@ -44,7 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
     public UserModel findByEmailAndPassword(String email, String password) throws CustomAuthException {
         try {
             UserModel userModel = jdbcTemplate.queryForObject(SQL_FIND_BY_EMAIL, new Object[]{email}, userRowMapper);
-            if (!password.equals(userModel.getPassword()))
+            if (!BCrypt.checkpw(password, userModel.getPassword()))
                 throw new CustomAuthException("Invalid email/password");
             return userModel;
         } catch (Exception e) {
