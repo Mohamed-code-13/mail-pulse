@@ -4,7 +4,6 @@ import com.mohamedcode.mailpulse.exceptions.CustomAuthException;
 import com.mohamedcode.mailpulse.models.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,8 +15,9 @@ import java.sql.Statement;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     private static final String SQL_CREATE = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
-    private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM USERS WHERE email = ?";
-    private static final String SQL_FIND_BY_ID = "SELECT * FROM USERS WHERE user_id = ?";
+    private static final String SQL_COUNT_BY_EMAIL = "SELECT COUNT(*) FROM users WHERE email = ?";
+    private static final String SQL_FIND_BY_ID = "SELECT * FROM users WHERE user_id = ?";
+    private static final String SQL_FIND_BY_EMAIL = "SELECT * FROM users WHERE email = ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -41,8 +41,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserModel findByEmailAndPassword(String name, String password) throws CustomAuthException {
-        return null;
+    public UserModel findByEmailAndPassword(String email, String password) throws CustomAuthException {
+        try {
+            UserModel userModel = jdbcTemplate.queryForObject(SQL_FIND_BY_EMAIL, new Object[]{email}, userRowMapper);
+            if (!password.equals(userModel.getPassword()))
+                throw new CustomAuthException("Invalid email/password");
+            return userModel;
+        } catch (Exception e) {
+            throw new CustomAuthException("Invalid email/password");
+        }
     }
 
     @Override

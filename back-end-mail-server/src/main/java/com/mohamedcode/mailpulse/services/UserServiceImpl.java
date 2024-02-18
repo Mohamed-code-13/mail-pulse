@@ -18,7 +18,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel validateUser(String email, String password) throws CustomAuthException {
-        return null;
+        if (email != null)
+            email = email.toLowerCase();
+
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     @Override

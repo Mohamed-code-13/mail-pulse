@@ -20,7 +20,7 @@ public class registrationController {
     @Autowired
     UserService userService;
 
-    @PostMapping("signup")
+    @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signUpUser(@RequestBody Map<String, Object> userMap) {
         String name = (String) userMap.get("name");
         String email = (String) userMap.get("email");
@@ -29,6 +29,17 @@ public class registrationController {
         UserModel user = userService.registerUser(name, email, password);
         Map<String, String> map = new HashMap<>();
         map.put("message", "Registered successfully");
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<Map<String, String>> logInUser(@RequestBody Map<String, Object> userMap) {
+        String email = (String) userMap.get("email");
+        String password = (String) userMap.get("password");
+
+        UserModel userModel = userService.validateUser(email, password);
+        Map<String, String> map = new HashMap<>();
+        map.put("message", "Logged In Successfully");
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }
