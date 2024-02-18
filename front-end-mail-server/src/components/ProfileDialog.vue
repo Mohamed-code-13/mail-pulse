@@ -18,15 +18,14 @@
 </template>
 
 <script>
-import { ref } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
   setup() {
     const store = useStore()
-
-    const name = ref('mohamed')
-    const email = ref('mohamed@test.com')
+    const user = store.getters.user
+    const name = user.name
+    const email = user.email
 
     const closeProfile = () => {
       store.commit('closeProfileDialog')
@@ -36,6 +35,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 dialog {
   position: absolute;
@@ -49,6 +49,7 @@ dialog {
   border: 1px solid gray;
   border-radius: 12px;
 }
+
 h2 {
   border-bottom: 1px solid gray;
   margin-bottom: 14px;
@@ -58,10 +59,12 @@ h2 {
   padding: 10px;
   text-align: left;
 }
+
 label,
 h3 {
   margin: 10px 0;
 }
+
 button {
   display: flex;
   justify-content: space-evenly;
@@ -75,6 +78,7 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
 #close-btn {
   color: green;
   background: white;

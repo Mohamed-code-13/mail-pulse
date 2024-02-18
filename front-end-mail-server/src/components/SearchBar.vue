@@ -19,6 +19,18 @@
         <option value="" selected disabled hidden>Search by</option>
         <option v-for="option in searchOptions" :value="option" :key="option">{{ option }}</option>
       </select>
+
+      <select
+        :value="priorityValue"
+        @input="$emit('update:priorityValue', $event.target.value)"
+        name="priority-by"
+        class="dropdown"
+      >
+        <option value="" selected disabled hidden>Any Priority</option>
+        <option v-for="option in priorityOptions" :value="option" :key="option">
+          {{ option }}
+        </option>
+      </select>
     </div>
 
     <div class="right">
@@ -27,7 +39,7 @@
         <option v-for="option in sortOptions" :value="option" :key="option">{{ option }}</option>
       </select>
 
-      <button class="sort-btn">
+      <button @click="$emit('onSort', sortIndex, 0)" class="sort-btn">
         <span class="material-symbols-outlined"> sort </span>
         Sort
       </button>
@@ -39,15 +51,29 @@
 import { ref, computed } from 'vue'
 
 export default {
-  props: ['title', 'searchValue', 'filterValue'],
-  emits: ['update:searchValue', 'update:filterValue'],
+  props: ['title', 'searchValue', 'filterValue', 'priorityValue'],
+  emits: ['update:searchValue', 'update:filterValue', 'update:priorityValue', 'onSort'],
   setup() {
-    const searchOptions = computed(() => ['Subject', 'Sender', 'Description', 'Tag'])
+    const searchOptions = computed(() => ['Subject', 'Sender', 'Description'])
+    const priorityOptions = computed(() => ['Any Priority', '1 (Low)', '2', '3', '4', '5 (High)'])
 
     const sortChose = ref('')
     const sortOptions = computed(() => ['Ascending', 'Descending', 'Priority'])
 
-    return { searchOptions, sortChose, sortOptions }
+    const sortIndex = computed(() => {
+      switch (sortChose.value) {
+        case 'Ascending':
+          return 0
+        case 'Descending':
+          return 1
+        case 'Priority':
+          return 2
+        default:
+          return 0
+      }
+    })
+
+    return { searchOptions, priorityOptions, sortChose, sortOptions, sortIndex }
   }
 }
 </script>
@@ -57,6 +83,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 
 .left {
@@ -85,6 +112,7 @@ export default {
 
 select {
   padding: 5px;
+  margin: 5px;
   border: none;
   border-bottom: 1px solid gray;
   background-color: transparent;

@@ -1,5 +1,5 @@
 <template>
-  <div id="inbox">
+  <div id="draft">
     <div id="header">
       <SearchBar
         :searchValue="searchValue"
@@ -8,11 +8,9 @@
         @update:filterValue="(val) => (filterValue = val)"
         :priorityValue="priorityValue"
         @update:priorityValue="(val) => (priorityValue = val)"
-        @onSort="getInbox"
+        @onSort="getDraft"
         title="Search mail"
       />
-
-      <span @click="addFolder" class="material-symbols-outlined folder"> create_new_folder </span>
 
       <span @click="deleteEmails" class="material-symbols-outlined delete"> delete </span>
     </div>
@@ -37,7 +35,8 @@
       :emails="filterEmails"
       :checkedEmails="selectedEmails"
       @selectEmail="handleSelectEmail"
-      page="inbox-detail"
+      page="draft-detail"
+      :key="selectedEmails"
     />
   </div>
 </template>
@@ -86,11 +85,11 @@ export default {
       })
     })
 
-    const getInbox = async (sort, page) => {
-      await store.dispatch('getInbox', { token: store.getters.token, sort: sort, page })
-      emails.value = store.getters.inboxMails
-      current.value = store.getters.curInbox
-      total.value = store.getters.totalInbox
+    const getDraft = async (sort, page) => {
+      await store.dispatch('getDraft', { token: store.getters.token, sort: sort, page })
+      emails.value = store.getters.draftMails
+      current.value = store.getters.curDraft
+      total.value = store.getters.totalDraft
       sortValue.value = sort
     }
 
@@ -102,59 +101,54 @@ export default {
       }
     }
 
-    const addFolder = () => {
-      store.commit('openFolderDialog', selectedEmails.value)
-    }
-
     const deleteEmails = async () => {
       const emailService = api.emailService
       await emailService.deleteEmail(store.getters.token, selectedEmails.value)
-      await store.dispatch('updateAllFolders', { token: store.getters.token, sort: 0 })
+      await store.dispatch('updateAllFolders', { token: store.getters.token })
     }
 
     const getNextPage = async () => {
-      await getInbox(sortValue.value, 1)
+      await getDraft(sortValue.value, 1)
     }
 
     const getPreviousPage = async () => {
-      await getInbox(sortValue.value, 2)
+      await getDraft(sortValue.value, 2)
     }
 
     onMounted(async () => {
-      await getInbox(0, 0)
+      await getDraft(0, 0)
     })
 
     store.watch(
-      (state, getters) => getters.inboxMails,
+      (state, getters) => getters.draftMails,
       () => {
-        emails.value = store.getters.inboxMails
+        emails.value = store.getters.draftMails
       }
     )
     store.watch(
-      (state, getters) => getters.curInbox,
+      (state, getters) => getters.curDraft,
       () => {
-        current.value = store.getters.curInbox
+        current.value = store.getters.curDraft
       }
     )
     store.watch(
-      (state, getters) => getters.totalInbox,
+      (state, getters) => getters.totalDraft,
       () => {
-        total.value = store.getters.totalInbox
+        total.value = store.getters.totalDraft
       }
     )
 
     return {
       emails,
       selectedEmails,
+      filterEmails,
       current,
       total,
-      filterEmails,
       searchValue,
       filterValue,
       priorityValue,
-      getInbox,
+      getDraft,
       handleSelectEmail,
-      addFolder,
       deleteEmails,
       getNextPage,
       getPreviousPage
@@ -164,7 +158,7 @@ export default {
 </script>
 
 <style scoped>
-#inbox {
+#draft {
   flex: 0.8;
   overflow-x: hidden;
   height: 90vh;

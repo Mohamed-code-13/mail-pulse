@@ -1,5 +1,5 @@
 <template>
-  <div id="inbox">
+  <div id="sent">
     <div id="header">
       <SearchBar
         :searchValue="searchValue"
@@ -8,11 +8,11 @@
         @update:filterValue="(val) => (filterValue = val)"
         :priorityValue="priorityValue"
         @update:priorityValue="(val) => (priorityValue = val)"
-        @onSort="getInbox"
+        @onSort="getSent"
         title="Search mail"
       />
 
-      <span @click="addFolder" class="material-symbols-outlined folder"> create_new_folder </span>
+      <!-- <span @click="addFolder" class="material-symbols-outlined folder"> create_new_folder </span> -->
 
       <span @click="deleteEmails" class="material-symbols-outlined delete"> delete </span>
     </div>
@@ -37,7 +37,8 @@
       :emails="filterEmails"
       :checkedEmails="selectedEmails"
       @selectEmail="handleSelectEmail"
-      page="inbox-detail"
+      page="sent-detail"
+      :key="selectedEmails"
     />
   </div>
 </template>
@@ -86,11 +87,11 @@ export default {
       })
     })
 
-    const getInbox = async (sort, page) => {
-      await store.dispatch('getInbox', { token: store.getters.token, sort: sort, page })
-      emails.value = store.getters.inboxMails
-      current.value = store.getters.curInbox
-      total.value = store.getters.totalInbox
+    const getSent = async (sort, page) => {
+      await store.dispatch('getSent', { token: store.getters.token, sort: sort, page })
+      emails.value = store.getters.sentMails
+      current.value = store.getters.curSent
+      total.value = store.getters.totalSent
       sortValue.value = sort
     }
 
@@ -113,46 +114,46 @@ export default {
     }
 
     const getNextPage = async () => {
-      await getInbox(sortValue.value, 1)
+      await getSent(sortValue.value, 1)
     }
 
     const getPreviousPage = async () => {
-      await getInbox(sortValue.value, 2)
+      await getSent(sortValue.value, 2)
     }
 
     onMounted(async () => {
-      await getInbox(0, 0)
+      await getSent(0, 0)
     })
 
     store.watch(
-      (state, getters) => getters.inboxMails,
+      (state, getters) => getters.sentMails,
       () => {
-        emails.value = store.getters.inboxMails
+        emails.value = store.getters.sentMails
       }
     )
     store.watch(
-      (state, getters) => getters.curInbox,
+      (state, getters) => getters.curSent,
       () => {
-        current.value = store.getters.curInbox
+        current.value = store.getters.curSent
       }
     )
     store.watch(
-      (state, getters) => getters.totalInbox,
+      (state, getters) => getters.totalSent,
       () => {
-        total.value = store.getters.totalInbox
+        total.value = store.getters.totalSent
       }
     )
 
     return {
       emails,
       selectedEmails,
+      filterEmails,
       current,
       total,
-      filterEmails,
       searchValue,
       filterValue,
       priorityValue,
-      getInbox,
+      getSent,
       handleSelectEmail,
       addFolder,
       deleteEmails,
@@ -164,7 +165,7 @@ export default {
 </script>
 
 <style scoped>
-#inbox {
+#sent {
   flex: 0.8;
   overflow-x: hidden;
   height: 90vh;

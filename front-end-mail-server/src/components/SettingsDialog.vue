@@ -2,35 +2,46 @@
   <dialog open>
     <h2>Settings</h2>
 
-    <button @click="closeCompose" id="logout-btn" type="button">
+    <button @click="logoutUser" id="logout-btn" type="button">
       <span class="material-symbols-outlined"> logout </span>
+
       Logout
     </button>
 
-    <button @click="closeCompose" id="delete-btn" type="button">
+    <!-- <button @click="closeCompose" id="delete-btn" type="button">
       <span class="material-symbols-outlined"> delete_forever </span>
+
       Delete Account
-    </button>
+    </button> -->
 
     <button @click="closeSettings" id="close-btn" type="button">
-      <span class="material-symbols-outlined"> close </span>
-      Cancel
+      <span class="material-symbols-outlined"> cancel </span>
+
+      Close
     </button>
   </dialog>
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
   setup() {
     const store = useStore()
+    const router = useRouter()
+
+    const logoutUser = async () => {
+      await store.dispatch('logout', { token: store.getters.token })
+      closeSettings()
+      router.push({ name: 'login' })
+    }
 
     const closeSettings = () => {
       store.commit('closeSettingsDialog')
     }
 
-    return { closeSettings }
+    return { logoutUser, closeSettings }
   }
 }
 </script>
@@ -48,11 +59,13 @@ dialog {
   border: 1px solid gray;
   border-radius: 12px;
 }
+
 h2 {
   border-bottom: 1px solid gray;
   margin-bottom: 14px;
   padding-bottom: 4px;
 }
+
 button {
   display: flex;
   justify-content: space-evenly;
@@ -66,14 +79,17 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
 #logout-btn {
   color: white;
   background: gray;
 }
+
 #delete-btn {
   color: white;
   background: red;
 }
+
 #close-btn {
   color: green;
   background: white;

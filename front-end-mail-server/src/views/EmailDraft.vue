@@ -1,140 +1,144 @@
 <template>
-  <dialog open>
+  <div id="email-draft">
+    <h2>Draft Email</h2>
     <form action="#" @submit.prevent="">
-      <div id="all">
-        <div id="left">
-          <h2>New Email</h2>
-          <label>From:</label>
-          <input type="text" :value="emailFrom" disabled />
+      <label>From:</label>
+      <input type="text" :value="emailFrom" disabled />
 
-          <div id="email-to">
-            <label>To:</label>
-            <select v-if="allContacts.length" id="my-contact" multiple v-model="receivers">
-              <option v-for="contact in allContacts" :key="contact">
-                {{ contact }}
-              </option>
-            </select>
+      <div id="email-to">
+        <label>To:</label>
+        <select v-if="allContacts.length" id="my-contact" multiple v-model="receivers">
+          <option v-for="contact in allContacts" :key="contact">
+            {{ contact }}
+          </option>
+        </select>
 
-            <button @click="addReceiver" id="add-receiver-btn" type="button">
-              <span class="material-symbols-outlined"> add </span>
-              Add
-            </button>
-          </div>
-          <input type="text" v-model="emailTo" />
+        <button @click="addReceiver" id="add-receiver-btn" type="button">
+          <span class="material-symbols-outlined"> add </span>
+          Add
+        </button>
+      </div>
+      <input type="text" v-model="emailTo" />
 
-          <div id="receivers">
-            <div
-              v-for="receiver in receivers"
-              @click="removeReceiver(receiver)"
-              class="receiver"
-              :key="receiver"
-            >
-              {{ receiver }}
-              <span class="material-symbols-outlined"> delete </span>
-            </div>
-          </div>
-
-          <label>Subject:</label>
-          <input type="text" v-model="emailSubject" required />
-
-          <label>Description:</label>
-          <textarea v-model="emailDescription" required />
-
-          <label>Priority:</label>
-          <div id="priority">
-            <div v-for="p in priorityChoices" class="element" :key="p">
-              <input type="radio" v-model="priorityChose" name="priority" :value="p" />
-              <label>{{ p }}</label>
-            </div>
-          </div>
+      <div id="receivers">
+        <div
+          v-for="receiver in receivers"
+          @click="removeReceiver(receiver)"
+          class="receiver"
+          :key="receiver"
+        >
+          {{ receiver }}
+          <span class="material-symbols-outlined"> delete </span>
         </div>
+      </div>
 
-        <div id="right">
-          <label> Attachments </label>
+      <label>Subject:</label>
+      <input type="text" v-model="emailSubject" required />
 
-          <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave" @drop="drop">
-            <input
-              type="file"
-              multiple
-              name="file"
-              id="fileInput"
-              class="hidden-input"
-              @change="onChange"
-              ref="file"
-              accept=".pdf,.jpg,.jpeg,.png"
-            />
+      <label>Description:</label>
+      <textarea v-model="emailDescription" required />
 
-            <label for="fileInput" class="file-label">
-              <div v-if="isDragging">Release to drop files here.</div>
+      <label>Priority:</label>
+      <div id="priority">
+        <div v-for="p in priorityChoices" class="element" :key="p">
+          <input type="radio" v-model="priorityChose" name="priority" :value="p" />
+          <label>{{ p }}</label>
+        </div>
+      </div>
 
-              <div v-else>Drop files here or <u>click here</u> to upload.</div>
-            </label>
+      <div id="right">
+        <label> Attachments </label>
 
-            <div class="preview-container mt-4" v-if="files.length">
-              <div v-for="file in files" :key="file.name" class="preview-card">
-                <div>
-                  <img class="preview-img" :src="generateThumbnail(file)" />
+        <div class="dropzone-container" @dragover="dragover" @dragleave="dragleave" @drop="drop">
+          <input
+            type="file"
+            multiple
+            name="file"
+            id="fileInput"
+            class="hidden-input"
+            @change="onChange"
+            ref="file"
+            accept=".pdf,.jpg,.jpeg,.png"
+          />
 
-                  <p :title="file.name">
-                    {{ makeName(file.name) }}
-                  </p>
-                </div>
+          <label for="fileInput" class="file-label">
+            <div v-if="isDragging">Release to drop files here.</div>
 
-                <div>
-                  <button
-                    class="ml-2"
-                    type="button"
-                    @click="remove(files.indexOf(file))"
-                    title="Remove file"
-                  >
-                    <b>&times;</b>
-                  </button>
-                </div>
+            <div v-else>Drop files here or <u>click here</u> to upload.</div>
+          </label>
+
+          <div class="preview-container mt-4" v-if="files.length">
+            <div v-for="file in files" :key="file.name" class="preview-card">
+              <div>
+                <img class="preview-img" :src="generateThumbnail(file)" />
+
+                <p :title="file.name">
+                  {{ makeName(file.name) }}
+                </p>
+              </div>
+
+              <div>
+                <button
+                  class="ml-2"
+                  type="button"
+                  @click="remove(files.indexOf(file))"
+                  title="Remove file"
+                >
+                  <b>&times;</b>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <div id="attach-wrap">
+        <div v-for="file in attachments" class="attachments" :key="file.fileName">
+          <button @click="getFileDownloadUrl(file)">
+            <span class="material-symbols-outlined"> download </span>
+
+            {{ file.fileName }}
+          </button>
+        </div>
+      </div>
+
       <div v-if="errorMsg" id="error">{{ errorMsg }}</div>
 
       <div id="btns">
-        <button @click="closeCompose" id="cancel-btn" type="button">
-          <span class="material-symbols-outlined"> cancel </span>
-          Cancel
-        </button>
-
-        <button type="submit" @click="draftEmail" id="draft-btn">
+        <button type="submit" @click="updateDraftEmail" id="draft-btn">
           <span class="material-symbols-outlined"> edit_document </span>
           Draft
         </button>
 
-        <button type="submit" @click="sendEmail" id="send-btn">
+        <button type="submit" @click="submitDraftEmail" id="send-btn">
           <span class="material-symbols-outlined"> send </span>
           Send
         </button>
       </div>
     </form>
-  </dialog>
+  </div>
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import EmailModel from '../models/EmailModel'
-import api from '@/api'
 import EmailServiceAdapter from '@/models/EmailServiceAdapter'
-import EmailModelBuilder from '@/models/EmailModelBuilder'
+import api from '@/api'
 
 export default {
-  setup() {
+  props: ['id'],
+  setup(props) {
     const store = useStore()
+    const router = useRouter()
+    const emailId = props.id
+    const email = store.getters.draftMails.find((e) => e.id == emailId)
 
-    const emailFrom = store.getters.user.email
-    const emailTo = ref('')
-    const emailSubject = ref('')
-    const emailDescription = ref('')
-    const priorityChose = ref('1 (Low)')
+    const emailFrom = email.sender
+    const emailTo = ref(email.receiver)
+    const emailSubject = ref(email.subject)
+    const emailDescription = ref(email.body)
+    const priorityChose = ref(email.priority)
     const receivers = ref([])
     const errorMsg = ref('')
     const isDragging = ref(false)
@@ -142,13 +146,10 @@ export default {
     const file = ref(null)
     const allContacts = ref([])
     const selectedContacts = ref([])
+    const attachments = ref([])
 
     const emailAdapter = new EmailServiceAdapter()
-    const priorityChoices = computed(() => ['1 (Low)', '2', '3', '4', '5 (High)'])
-
-    const closeCompose = () => {
-      store.commit('closeComposeDialog')
-    }
+    const priorityChoices = computed(() => ['1', '2', '3', '4', '5'])
 
     const addReceiver = () => {
       if (emailTo.value && emailTo.value.length > 0) {
@@ -169,39 +170,35 @@ export default {
       selectedContacts.value = selectedContacts.value.filter((r) => receiver != r)
     }
 
-    const createEmail = () => {
-      const email = new EmailModelBuilder()
-      return email
-        .addSender(emailFrom)
-        .addReceiver(receivers.value)
-        .addSubject(emailSubject.value)
-        .addBody(emailDescription.value)
-        .addPriority(Number(priorityChose.value.slice(0, 1)))
-        .addAttachments(files.value)
-        .build()
+    const updateEmail = () => {
+      email.receiver = receivers.value
+      email.subject = emailSubject.value
+      email.body = emailDescription.value
+      email.priority = Number(priorityChose.value)
+
+      email.files = files.value
     }
 
-    const sendEmail = async () => {
+    const submitDraftEmail = async () => {
       if (!validateInput(false)) return
 
-      const email = createEmail()
+      updateEmail()
+
       try {
-        await emailAdapter.sendEmail(email)
-        await store.dispatch('getSent', { token: store.getters.token, sort: 0, page: 0 })
-        closeCompose()
+        await emailAdapter.submitDraftEmail(email)
+        router.push('/home/draft')
       } catch (e) {
         errorMsg.value = JSON.parse(e).msg
       }
     }
 
-    const draftEmail = async () => {
+    const updateDraftEmail = async () => {
       if (!validateInput(true)) return
+      updateEmail()
 
-      const email = createEmail()
       try {
-        await emailAdapter.draftEmail(email)
-        await store.dispatch('getDraft', { token: store.getters.token, sort: 0, page: 0 })
-        closeCompose()
+        await emailAdapter.updateDraftEmail(email)
+        router.push('/home/draft')
       } catch (e) {
         errorMsg.value = JSON.parse(e).msg
       }
@@ -273,7 +270,41 @@ export default {
       allContacts.value = Array.from(contactsSet)
     }
 
+    const getAttachments = async () => {
+      const response = await api.attachmentService.getAttachments(store.getters.token, emailId)
+      let files = []
+      for (let i = 0; i < response.length; ++i) {
+        files[i] = { bytes: response[i].bytes, fileName: response[i].name }
+      }
+
+      attachments.value = files
+    }
+
+    const getFileDownloadUrl = (file) => {
+      const unitArray = new Uint8Array(
+        atob(file.bytes)
+          .split('')
+          .map((c) => c.charCodeAt(0))
+      )
+      const blob = new Blob([unitArray], { type: file.fileName })
+
+      const downlaodLink = document.createElement('a')
+      downlaodLink.href = window.URL.createObjectURL(blob)
+
+      downlaodLink.download = file.fileName
+
+      document.body.appendChild(downlaodLink)
+
+      downlaodLink.click()
+
+      document.body.removeChild(downlaodLink)
+    }
+
     getAllContacts()
+
+    onMounted(async () => {
+      await getAttachments()
+    })
 
     return {
       emailFrom,
@@ -289,11 +320,11 @@ export default {
       file,
       allContacts,
       selectedContacts,
-      closeCompose,
+      attachments,
       addReceiver,
       removeReceiver,
-      sendEmail,
-      draftEmail,
+      submitDraftEmail,
+      updateDraftEmail,
       onChange,
       generateThumbnail,
       makeName,
@@ -301,39 +332,26 @@ export default {
       dragover,
       dragleave,
       drop,
-      getAllContacts
+      getFileDownloadUrl
     }
   }
 }
 </script>
 
 <style scoped>
-dialog {
-  position: absolute;
-  left: 35%;
-  top: 30%;
-  margin-left: -25vh;
-  margin-top: -25vh;
-  width: 800px;
-  padding: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid gray;
+#email-draft {
+  flex: 0.8;
+  overflow-x: hidden;
+  height: 90vh;
+
+  background-color: #eeeeeead;
   border-radius: 12px;
-}
-
-#all {
-  display: flex;
-}
-
-#left {
-  width: 700px;
-  padding-right: 12px;
 }
 
 h2 {
   border-bottom: 1px solid gray;
-  margin-bottom: 6px;
-  padding-bottom: 4px;
+  margin: 6px;
+  padding: 6px;
 }
 
 form {
@@ -344,21 +362,22 @@ form {
 label {
   color: #555;
   display: inline-block;
-  margin: 10px 0;
-  font-size: 14px;
+  margin: 10px;
+  font-size: 16px;
   letter-spacing: 1px;
   font-weight: bold;
-  background: white;
 }
 
 input,
 textarea {
   display: block;
-  padding: 6px;
-  width: 100%;
+  padding: 10px;
+  margin: 0 10px;
+  width: 98%;
   box-sizing: border-box;
   border: none;
   border-bottom: 1px solid #ddd;
+  border-radius: 10px;
   color: #555;
   background: white;
 }
@@ -376,6 +395,13 @@ textarea {
   background-color: rgb(21, 141, 21);
 }
 
+#error {
+  color: red;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
 #btns {
   display: flex;
   justify-content: space-around;
@@ -383,7 +409,7 @@ textarea {
 
 #priority {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 10px 0;
   align-items: center;
 }
@@ -412,13 +438,8 @@ textarea {
 
 .element input {
   cursor: pointer;
-}
-
-#error {
-  color: red;
-  padding: 10px;
-  text-align: center;
-  font-weight: bold;
+  width: 20px;
+  height: 20px;
 }
 
 button {
@@ -431,6 +452,7 @@ button {
   border: none;
   border-radius: 12px;
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -444,19 +466,6 @@ button {
   background-color: rgb(123, 78, 78);
 }
 
-#cancel-btn {
-  color: green;
-  background: white;
-  border: 1px solid green;
-}
-.main {
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  height: 100vh;
-  justify-content: center;
-  text-align: center;
-}
 .dropzone-container {
   padding: 4rem;
   background: #f7fafc;
@@ -506,5 +515,28 @@ button {
   padding: 3px;
   margin-bottom: 5px;
   border-radius: 6px;
+}
+
+#attach-wrap {
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+}
+
+.attachments button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin: 10px;
+  color: white;
+  background-color: green;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.attachments button span {
+  padding-right: 8px;
 }
 </style>

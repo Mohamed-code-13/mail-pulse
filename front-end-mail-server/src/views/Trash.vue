@@ -1,5 +1,5 @@
 <template>
-  <div id="inbox">
+  <div id="trash">
     <div id="header">
       <SearchBar
         :searchValue="searchValue"
@@ -8,11 +8,13 @@
         @update:filterValue="(val) => (filterValue = val)"
         :priorityValue="priorityValue"
         @update:priorityValue="(val) => (priorityValue = val)"
-        @onSort="getInbox"
+        @onSort="getTrash"
         title="Search mail"
       />
 
-      <span @click="addFolder" class="material-symbols-outlined folder"> create_new_folder </span>
+      <span @click="restoreMail" class="material-symbols-outlined folder">
+        settings_backup_restore
+      </span>
 
       <span @click="deleteEmails" class="material-symbols-outlined delete"> delete </span>
     </div>
@@ -35,9 +37,10 @@
 
     <ListEmails
       :emails="filterEmails"
+      page="trash-detail"
       :checkedEmails="selectedEmails"
       @selectEmail="handleSelectEmail"
-      page="inbox-detail"
+      :key="selectedEmails"
     />
   </div>
 </template>
@@ -86,20 +89,20 @@ export default {
       })
     })
 
-    const getInbox = async (sort, page) => {
-      await store.dispatch('getInbox', { token: store.getters.token, sort: sort, page })
-      emails.value = store.getters.inboxMails
-      current.value = store.getters.curInbox
-      total.value = store.getters.totalInbox
-      sortValue.value = sort
-    }
-
     const handleSelectEmail = (eamilId) => {
       if (selectedEmails.value.includes(eamilId)) {
         selectedEmails.value = selectedEmails.value.filter((id) => id != eamilId)
       } else {
         selectedEmails.value.push(eamilId)
       }
+    }
+
+    const getTrash = async (sort, page) => {
+      await store.dispatch('getTrash', { token: store.getters.token, sort: sort, page })
+      emails.value = store.getters.trashMails
+      current.value = store.getters.curTrash
+      total.value = store.getters.totalTrash
+      sortValue.value = sort
     }
 
     const addFolder = () => {
@@ -113,58 +116,64 @@ export default {
     }
 
     const getNextPage = async () => {
-      await getInbox(sortValue.value, 1)
+      await getTrash(sortValue.value, 1)
     }
 
     const getPreviousPage = async () => {
-      await getInbox(sortValue.value, 2)
+      await getTrash(sortValue.value, 2)
+    }
+
+    const restoreMail = async () => {
+      await api.emailService.restoreMail(store.getters.token, selectedEmails.value)
+      await store.dispatch('updateAllFolders', { token: store.getters.token })
     }
 
     onMounted(async () => {
-      await getInbox(0, 0)
+      await getTrash(0, 0)
     })
 
     store.watch(
-      (state, getters) => getters.inboxMails,
+      (state, getters) => getters.trashMails,
       () => {
-        emails.value = store.getters.inboxMails
+        emails.value = store.getters.trashMails
       }
     )
     store.watch(
-      (state, getters) => getters.curInbox,
+      (state, getters) => getters.curTrash,
       () => {
-        current.value = store.getters.curInbox
+        current.value = store.getters.curTrash
       }
     )
     store.watch(
-      (state, getters) => getters.totalInbox,
+      (state, getters) => getters.totalTrash,
       () => {
-        total.value = store.getters.totalInbox
+        total.value = store.getters.totalTrash
       }
     )
 
     return {
       emails,
-      selectedEmails,
+      filterEmails,
       current,
       total,
-      filterEmails,
+      selectedEmails,
       searchValue,
       filterValue,
       priorityValue,
-      getInbox,
-      handleSelectEmail,
+      getTrash,
+      getNextPage,
       addFolder,
       deleteEmails,
-      getNextPage,
-      getPreviousPage
+      getPreviousPage,
+      handleSelectEmail,
+      restoreMail
     }
   }
 }
 </script>
 
 <style scoped>
-#inbox {
+#trash {
   flex: 0.8;
   overflow-x: hidden;
   height: 90vh;
