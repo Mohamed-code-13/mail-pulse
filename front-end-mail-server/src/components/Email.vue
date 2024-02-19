@@ -42,21 +42,21 @@ export default {
     const router = useRouter()
 
     const goToEmail = () => {
-      router.push({ name: props.page, params: { id: props.email.id } })
+      router.push({ name: props.page, params: { id: props.email.email_id } })
     }
 
     const restoreMail = async () => {
-      await api.emailService.restoreMail(store.getters.token, [props.email.id])
+      await api.emailService.restoreMail(store.getters.token, [props.email.email_id])
       await store.dispatch('updateAllFolders', { token: store.getters.token })
     }
 
     const addFolder = () => {
-      store.commit('openFolderDialog', [props.email.id])
+      store.commit('openFolderDialog', [props.email.email_id])
     }
 
     const deleteEmail = async () => {
       const emailService = api.emailService
-      await emailService.deleteEmail(store.getters.token, [props.email.id])
+      await emailService.deleteEmail(store.getters.token, [props.email.email_id])
       await store.dispatch('updateAllFolders', { token: store.getters.token, sort: 0 })
     }
 
