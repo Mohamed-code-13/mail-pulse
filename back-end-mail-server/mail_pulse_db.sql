@@ -1,7 +1,7 @@
 DROP DATABASE mailpulsedb;
 DROP USER mailpulse;
 
-CREATE USER mailpulse with password 'password';
+CREATE USER mailpulse with password '123456';
 CREATE DATABASE mailpulsedb WITH template=template0 owner=mailpulse;
 \CONNECT mailpulsedb;
 
