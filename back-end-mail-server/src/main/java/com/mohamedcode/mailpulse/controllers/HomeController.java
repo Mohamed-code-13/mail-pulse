@@ -44,7 +44,7 @@ public class HomeController {
                                                         @RequestHeader Integer sort,
                                                         @RequestHeader Integer page) {
         int userId = getUserId(authorization);
-        var inbox = homeService.getInbox(userId);
+        var inbox = homeService.getInbox(userId, sort);
         Map<String, Object> map = new HashMap<>();
         map.put("list", inbox);
         map.put("current", 1);

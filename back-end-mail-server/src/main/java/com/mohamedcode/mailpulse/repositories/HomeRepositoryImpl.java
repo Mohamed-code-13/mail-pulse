@@ -34,9 +34,23 @@ public class HomeRepositoryImpl implements HomeRepository {
     }
 
     @Override
-    public List<EmailModel> getEmailsByReceiverId(Integer userId) {
-        return jdbcTemplate.query(SQL_GET_EMAILS_BY_RECEIVER + userId,
+    public List<EmailModel> getEmailsByReceiverId(Integer userId, Integer sort) {
+        String query = addSortingToQuery(SQL_GET_EMAILS_BY_RECEIVER + userId, sort);
+        return jdbcTemplate.query(query,
                 BeanPropertyRowMapper.newInstance(EmailModel.class));
+    }
+
+    private String addSortingToQuery(String query, Integer sort) {
+        switch (sort) {
+            case 0:
+                return query + " ORDER BY email_id ASC";
+            case 1:
+                return query + " ORDER BY email_id DESC";
+            case 2:
+                return query + " ORDER BY priority DESC";
+            default:
+                return query + " ORDER BY email_id DESC";
+        }
     }
 
     private final RowMapper<UserModel> userRowMapper = ((rs, rowNum) -> new UserModel(

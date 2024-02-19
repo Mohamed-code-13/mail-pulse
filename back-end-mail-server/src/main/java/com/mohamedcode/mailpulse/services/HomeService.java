@@ -8,6 +8,6 @@ import java.util.Map;
 public interface HomeService {
     UserModel getUserById(Integer userId);
 
-    List<Map<String, Object>> getInbox(Integer userId);
+    List<Map<String, Object>> getInbox(Integer userId, Integer sort);
 
 }

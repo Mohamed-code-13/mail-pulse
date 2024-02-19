@@ -9,5 +9,5 @@ public interface HomeRepository {
 
     UserModel findUserById(Integer userId);
 
-    List<EmailModel> getEmailsByReceiverId(Integer userId);
+    List<EmailModel> getEmailsByReceiverId(Integer userId, Integer sort);
 }
