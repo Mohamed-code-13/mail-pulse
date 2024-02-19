@@ -13,7 +13,16 @@ import java.util.List;
 @Repository
 public class HomeRepositoryImpl implements HomeRepository {
 
-    private static final String SQL_GET_EMAILS_BY_RECEIVER = "SELECT * FROM emails WHERE receiver_id = ";
+    private static final String SQL_GET_EMAILS_BY_RECEIVER = """
+            SELECT email_id, sender.email AS sender, receiver.email AS receiver, subject, description, priority
+            FROM emails
+            JOIN users sender
+                ON sender.user_id = emails.sender_id
+            JOIN users receiver
+                ON receiver.user_id = emails.receiver_id
+            WHERE receiver_id = 
+            """;
+
     private static final String SQL_GET_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
 
     @Autowired
@@ -26,9 +35,8 @@ public class HomeRepositoryImpl implements HomeRepository {
 
     @Override
     public List<EmailModel> getEmailsByReceiverId(Integer userId) {
-        var emails = jdbcTemplate.query(SQL_GET_EMAILS_BY_RECEIVER + userId, BeanPropertyRowMapper.newInstance(EmailModel.class));
-        System.out.println(emails.size());
-        return emails;
+        return jdbcTemplate.query(SQL_GET_EMAILS_BY_RECEIVER + userId,
+                BeanPropertyRowMapper.newInstance(EmailModel.class));
     }
 
     private final RowMapper<UserModel> userRowMapper = ((rs, rowNum) -> new UserModel(

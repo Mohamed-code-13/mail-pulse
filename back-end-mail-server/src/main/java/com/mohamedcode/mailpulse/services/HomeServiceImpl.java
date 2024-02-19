@@ -37,15 +37,10 @@ public class HomeServiceImpl implements HomeService {
 
     private Map<String, Object> convertEmailToMap(EmailModel emailModel) {
         Map<String, Object> map = new HashMap<>();
-        UserModel sender = homeRepository.findUserById(emailModel.getSenderId());
-        UserModel receiver = homeRepository.findUserById(emailModel.getReceiverId());
-
-        String senderEmail = sender.getEmail();
-        String receiverEmail = receiver.getEmail();
 
         map.put("email_id", emailModel.getEmailId());
-        map.put("sender", senderEmail);
-        map.put("receiver", receiverEmail);
+        map.put("sender", emailModel.getSender());
+        map.put("receiver", emailModel.getReceiver());
         map.put("subject", emailModel.getSubject());
         map.put("description", emailModel.getDescription());
         map.put("priority", emailModel.getPriority());

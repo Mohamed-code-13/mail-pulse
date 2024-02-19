@@ -2,18 +2,18 @@ package com.mohamedcode.mailpulse.models;
 
 public class EmailModel {
     public Integer emailId;
-    public Integer senderId;
-    public Integer receiverId;
+    public String sender;
+    public String receiver;
     public String subject;
     public String description;
     public Integer priority;
 
     public EmailModel() {}
 
-    public EmailModel(Integer emailId, Integer senderId, Integer receiverId, String subject, String description, Integer priority) {
+    public EmailModel(Integer emailId, String sender, String receiver, String subject, String description, Integer priority) {
         this.emailId = emailId;
-        this.senderId = senderId;
-        this.receiverId = receiverId;
+        this.sender = sender;
+        this.receiver = receiver;
         this.subject = subject;
         this.description = description;
         this.priority = priority;
@@ -27,20 +27,20 @@ public class EmailModel {
         this.emailId = emailId;
     }
 
-    public Integer getSenderId() {
-        return senderId;
+    public String getSender() {
+        return sender;
     }
 
-    public void setSenderId(Integer senderId) {
-        this.senderId = senderId;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public Integer getReceiverId() {
-        return receiverId;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setReceiverId(Integer receiverId) {
-        this.receiverId = receiverId;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public String getSubject() {

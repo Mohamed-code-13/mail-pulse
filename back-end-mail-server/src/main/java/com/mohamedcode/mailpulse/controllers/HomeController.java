@@ -1,9 +1,7 @@
 package com.mohamedcode.mailpulse.controllers;
 
 import com.mohamedcode.mailpulse.models.UserModel;
-import com.mohamedcode.mailpulse.repositories.UserRepository;
 import com.mohamedcode.mailpulse.services.HomeService;
-import com.mohamedcode.mailpulse.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
