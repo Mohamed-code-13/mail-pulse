@@ -12,23 +12,29 @@ class AuthService {
 
   async login(email, password) {
     const service = ApiService.getInstance()
-    return await service.makeRequest('login', 'POST', { email, password })
+    return await service.makeRequest('register/login', 'POST', { email, password })
   }
 
   async signup(name, email, password) {
     const service = ApiService.getInstance()
-    await service.makeRequest('signup', 'POST', { name, email, password })
+    await service.makeRequest('register/signup', 'POST', { name, email, password })
     return await this.login(email, password)
   }
 
   async logout(token) {
     const service = ApiService.getInstance()
-    return await service.makeRequest(`logout?token=${token}`, 'DELETE')
+    return await service.makeRequest(`register/logout?token=${token}`, 'DELETE')
   }
 
   async getUser(token) {
     const service = ApiService.getInstance()
-    return await service.makeRequest(`getuser?id=${token}`, 'GET')
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+
+    return await service.makeRequest('home/getuser', 'GET', null, true, headers)
   }
 }
 

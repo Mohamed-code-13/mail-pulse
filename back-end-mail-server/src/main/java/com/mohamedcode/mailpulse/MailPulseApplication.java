@@ -19,7 +19,7 @@ public class MailPulseApplication {
 		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
 
 		registrationBean.setFilter(authFilter);
-		registrationBean.addUrlPatterns("/home/*");
+		registrationBean.addUrlPatterns("/home/getuser");
 
 		return registrationBean;
 	}

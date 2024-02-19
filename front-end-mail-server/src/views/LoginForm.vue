@@ -37,6 +37,7 @@ export default {
         await store.dispatch('login', { email: email.value, password: password.value })
         router.push('/home/inbox')
       } catch (e) {
+        console.log(e)
         errorMsg.value = JSON.parse(e).msg
       }
     }

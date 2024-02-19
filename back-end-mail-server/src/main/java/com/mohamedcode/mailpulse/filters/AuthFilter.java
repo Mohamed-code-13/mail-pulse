@@ -10,6 +10,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
@@ -20,9 +21,14 @@ public class AuthFilter extends GenericFilterBean {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-        String authHeader = httpResponse.getHeader("Authorization");
+        httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        httpResponse.setHeader("Access-Control-Max-Age", "3600");
+        httpResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin");
+
+        String authHeader = httpRequest.getHeader("Authorization");
         if (authHeader != null) {
-            String[] authHeaders = authHeader.split("Beared ");
+            String[] authHeaders = authHeader.split("Bearer ");
             if (authHeaders.length > 1 && authHeaders[1] != null) {
                 String token = authHeaders[1];
                 try {
