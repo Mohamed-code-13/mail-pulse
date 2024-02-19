@@ -20,6 +20,7 @@ public class MailPulseApplication {
 
 		registrationBean.setFilter(authFilter);
 		registrationBean.addUrlPatterns("/home/getuser");
+		registrationBean.addUrlPatterns("/home/getinbox");
 
 		return registrationBean;
 	}
