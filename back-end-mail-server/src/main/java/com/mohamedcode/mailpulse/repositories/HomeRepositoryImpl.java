@@ -14,7 +14,7 @@ import java.util.List;
 public class HomeRepositoryImpl implements HomeRepository {
 
     private static final String SQL_GET_EMAILS_BY_RECEIVER = """
-            SELECT email_id, sender.email AS sender, receiver.email AS receiver, subject, description, priority
+            SELECT email_id, sender.email AS sender, receiver.email AS receiver, subject, body, priority, sent_date
             FROM emails
             JOIN users sender
                 ON sender.user_id = emails.sender_id

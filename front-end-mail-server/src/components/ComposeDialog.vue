@@ -190,7 +190,7 @@ export default {
         await store.dispatch('getSent', { token: store.getters.token, sort: 0, page: 0 })
         closeCompose()
       } catch (e) {
-        errorMsg.value = JSON.parse(e).msg
+        errorMsg.value = JSON.parse(e).message
       }
     }
 
@@ -203,7 +203,7 @@ export default {
         await store.dispatch('getDraft', { token: store.getters.token, sort: 0, page: 0 })
         closeCompose()
       } catch (e) {
-        errorMsg.value = JSON.parse(e).msg
+        errorMsg.value = JSON.parse(e).message
       }
     }
 

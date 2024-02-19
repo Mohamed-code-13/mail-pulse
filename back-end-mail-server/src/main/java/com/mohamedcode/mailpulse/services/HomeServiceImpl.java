@@ -42,8 +42,9 @@ public class HomeServiceImpl implements HomeService {
         map.put("sender", emailModel.getSender());
         map.put("receiver", emailModel.getReceiver());
         map.put("subject", emailModel.getSubject());
-        map.put("description", emailModel.getDescription());
+        map.put("body", emailModel.getBody());
         map.put("priority", emailModel.getPriority());
+        map.put("sentDate", emailModel.getSent_date());
 
         return map;
     }
