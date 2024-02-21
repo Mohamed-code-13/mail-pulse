@@ -6,7 +6,6 @@ import com.mohamedcode.mailpulse.models.UserModel;
 import com.mohamedcode.mailpulse.services.HomeService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -41,8 +39,8 @@ public class HomeController {
 
     @GetMapping("/inbox")
     public ResponseEntity<Map<String, Object>> getInbox(@RequestHeader("Authorization") String authorization,
-                                                        @RequestHeader Integer sort,
-                                                        @RequestHeader Integer page) {
+                                                        @RequestParam Integer sort,
+                                                        @RequestParam Integer page) {
         int userId = getUserId(authorization);
         var inbox = homeService.getInbox(userId, sort);
         Map<String, Object> map = new HashMap<>();
