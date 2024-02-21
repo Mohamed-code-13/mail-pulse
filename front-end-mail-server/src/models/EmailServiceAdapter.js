@@ -53,7 +53,7 @@ class EmailServiceAdapter extends EmailService {
 
   async updateDraftEmail(email) {
     const token = store.getters.token
-    const id = email.id
+    const id = email.email_id
     const subject = email.subject
     const body = email.body
     const priority = email.priority
@@ -75,7 +75,7 @@ class EmailServiceAdapter extends EmailService {
 
   async submitDraftEmail(email) {
     const token = store.getters.token
-    const id = email.id
+    const id = email.email_id
     const receiver = email.receiver
     const subject = email.subject
     const body = email.body

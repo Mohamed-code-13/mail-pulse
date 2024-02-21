@@ -188,7 +188,7 @@ export default {
         await emailAdapter.submitDraftEmail(email)
         router.push('/home/draft')
       } catch (e) {
-        errorMsg.value = JSON.parse(e).msg
+        errorMsg.value = JSON.parse(e).message
       }
     }
 
@@ -200,7 +200,7 @@ export default {
         await emailAdapter.updateDraftEmail(email)
         router.push('/home/draft')
       } catch (e) {
-        errorMsg.value = JSON.parse(e).msg
+        errorMsg.value = JSON.parse(e).message
       }
     }
 

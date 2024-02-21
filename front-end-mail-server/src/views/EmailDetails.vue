@@ -72,7 +72,7 @@ export default {
     })
 
     const email = computed(() => {
-      return emailList.value.find((e) => e.id == emailId)
+      return emailList.value.find((e) => e.email_id == emailId)
     })
 
     const getAttachments = async () => {

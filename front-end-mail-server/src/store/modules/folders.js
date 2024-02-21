@@ -62,6 +62,7 @@ const actions = {
     const mails = response.list
     const current = response.current
     const total = response.total
+    console.log(mails)
 
     commit('getInbox', { mails, current, total })
   },

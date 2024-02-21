@@ -13,14 +13,15 @@ public class MailPulseApplication {
 		SpringApplication.run(MailPulseApplication.class, args);
 	}
 
-	@Bean
-	public FilterRegistrationBean<AuthFilter> filterFilterRegistrationBean() {
-		AuthFilter authFilter = new AuthFilter();
-		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
-
-		registrationBean.setFilter(authFilter);
-		registrationBean.addUrlPatterns("/home/getuser");
-
-		return registrationBean;
-	}
+//	@Bean
+//	public FilterRegistrationBean<AuthFilter> filterFilterRegistrationBean() {
+////		AuthFilter authFilter = new AuthFilter();
+//		FilterRegistrationBean<AuthFilter> registrationBean = new FilterRegistrationBean<>();
+//
+//		registrationBean.setFilter(new AuthFilter());
+////		registrationBean.addUrlPatterns("/home", "/home/*");
+////		registrationBean.addUrlPatterns("/home/getinbox");
+//
+//		return registrationBean;
+//	}
 }
