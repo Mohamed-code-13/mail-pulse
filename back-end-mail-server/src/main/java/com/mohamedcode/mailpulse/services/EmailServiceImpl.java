@@ -1,5 +1,6 @@
 package com.mohamedcode.mailpulse.services;
 
+import com.mohamedcode.mailpulse.repositories.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,14 +12,14 @@ import java.util.List;
 @Transactional
 public class EmailServiceImpl implements EmailService {
     @Autowired
-    EmailService emailService;
+    EmailRepository emailRepository;
 
     @Override
     public void deleteEmail(Integer emailID) {
         // delete email from the current folder
         // add the deleted email to the trash folder
         // if the email in the trash folder delete it from the db
-        emailService.deleteEmail(emailID);
+        emailRepository.deleteEmail(emailID);
     }
 
     @Override
@@ -26,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
                           String subject, String body, Integer priority,
                           List<MultipartFile> files) {
         // create a new email and add it to the db
-        emailService.sendEmail(senderId, receivers,
+        emailRepository.sendEmail(senderId, receivers,
                                subject, body, priority, files);
     }
 }
