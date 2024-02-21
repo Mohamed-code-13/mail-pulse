@@ -2,22 +2,24 @@ package com.mohamedcode.mailpulse.controllers;
 
 import com.mohamedcode.mailpulse.Constants;
 import com.mohamedcode.mailpulse.exceptions.CustomAuthException;
+import com.mohamedcode.mailpulse.services.EmailService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/email")
 @CrossOrigin("*")
 public class EmailController {
+
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("/send")
     public ResponseEntity<Map<String, Object>> sendEmail(@RequestHeader("Authorization") String authorization,
@@ -28,7 +30,14 @@ public class EmailController {
                                                          @RequestParam Optional<List<MultipartFile>> files) {
         Integer userId = getUserId(authorization);
 
+        List<MultipartFile> attachments = new ArrayList<>();
+        if (files.isPresent()) {
+            attachments = files.get();
+        }
+        emailService.sendEmail(userId, receivers, subject, body, priority, attachments);
+
         Map<String, Object> map = new HashMap<>();
+        map.put("message", "Email sent successfully!");
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -38,8 +47,10 @@ public class EmailController {
                                                            @RequestParam Integer email_id) {
         Integer userId = getUserId(authorization);
 
+        emailService.deleteEmail(email_id);
+
         Map<String, Object> map = new HashMap<>();
-        map.put("message", "email_id: " + email_id);
+        map.put("message", "Email deleted successfully!");
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
