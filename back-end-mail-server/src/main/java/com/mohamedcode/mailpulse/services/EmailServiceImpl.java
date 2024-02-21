@@ -26,8 +26,9 @@ public class EmailServiceImpl implements EmailService {
     public void sendEmail(Integer senderId, List<String> receivers,
                           String subject, String body, Integer priority,
                           List<MultipartFile> files) {
-        // create a new email and add it to the db
-        emailRepository.sendEmail(senderId, receivers,
-                               subject, body, priority, files);
+        // create a new email and add it to the db for every receiver in receivers
+        for (String receiver : receivers)
+            emailRepository.sendEmail(senderId, receiver,
+                                      subject, body, priority, files);
     }
 }

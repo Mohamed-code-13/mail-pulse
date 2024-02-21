@@ -12,9 +12,15 @@ class EmailService {
 
   async sendEmail(formdata) {
     const service = ApiService.getInstance()
-    return await service.makeRequest('sendemail', 'POST', formdata, false, {})
-  }
 
+    const headers = {
+      Authorization: `Bearer ${formdata.get('token')}`,
+      'Content-Type': 'application/json'
+    }
+
+    return await service.makeRequest('email/send', 'POST', formdata, false, {})
+  }
+  // receivers
   async deleteEmail(token, id) {
     const service = ApiService.getInstance()
 

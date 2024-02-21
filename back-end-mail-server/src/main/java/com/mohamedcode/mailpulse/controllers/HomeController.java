@@ -47,8 +47,6 @@ public class HomeController {
         map.put("list", inbox);
         map.put("current", 1);
         map.put("total", 2);
-        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(Calendar.getInstance().getTime());
-        System.out.println(timestamp);
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }

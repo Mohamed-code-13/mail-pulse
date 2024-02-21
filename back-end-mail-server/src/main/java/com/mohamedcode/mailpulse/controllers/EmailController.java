@@ -22,7 +22,7 @@ public class EmailController {
     EmailService emailService;
 
     @PostMapping("/send")
-    public ResponseEntity<Map<String, Object>> sendEmail(@RequestHeader("Authorization") String authorization,
+    public ResponseEntity<Map<String, Object>> sendEmail(@RequestParam("token") String authorization,
                                                          @RequestParam List<String> receivers,
                                                          @RequestParam String subject,
                                                          @RequestParam String body,
