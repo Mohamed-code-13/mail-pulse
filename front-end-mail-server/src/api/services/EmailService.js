@@ -18,10 +18,12 @@ class EmailService {
   async deleteEmail(token, id) {
     const service = ApiService.getInstance()
 
-    return await service.makeRequest('delete', 'DELETE', {
-      token,
-      id
-    })
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+
+    return await service.makeRequest(`email/delete?email_id=${id}`, 'DELETE', null, true, headers)
   }
 
   async draftEmail(formdata) {
