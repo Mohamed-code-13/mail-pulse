@@ -17,6 +17,11 @@ public class FolderRepositoryImpl implements FolderRepository {
             FROM folders
             WHERE user_id = ? AND folder_name = ?
             """;
+    private static final String SQL_COUNT_EMAIL_BY_ID = """
+            SELECT COUNT(*)
+            FROM emails
+            WHERE (sender_id = ? OR receiver_id = ?) AND email_id = ?
+            """;
     private static final String SQL_INSERT_NEW_FOLDER = """
             INSERT INTO folders
                 (user_id, folder_name)
@@ -43,6 +48,12 @@ public class FolderRepositoryImpl implements FolderRepository {
                  OR (deleted_by_receiver = FALSE AND receiver_id = %d))
                 AND fold.folder_name = '%s'
             """;
+    private static final String SQL_MOVE_EMAIL_TO_FOLDER = """
+            UPDATE emails
+            SET folder_receiver = %d
+            WHERE email_id = %d
+            """;
+    private static final String SQL_GET_FOLDER_ID_BY_NAME = "SELECT folder_id FROM folders WHERE user_id = ? AND folder_name = ?";
     private static final String SQL_DELETE_FOLDER = "DELETE FROM folders WHERE user_id = ? AND folder_name = ?";
 
     @Autowired
@@ -64,6 +75,11 @@ public class FolderRepositoryImpl implements FolderRepository {
     }
 
     @Override
+    public Integer countEmailId(Integer userId, Integer emailId) {
+        return jdbcTemplate.queryForObject(SQL_COUNT_EMAIL_BY_ID, new Object[]{userId, userId, emailId}, Integer.class);
+    }
+
+    @Override
     public void deleteFolder(Integer userId, String folderName) {
         jdbcTemplate.update(SQL_DELETE_FOLDER, userId, folderName);
     }
@@ -73,6 +89,16 @@ public class FolderRepositoryImpl implements FolderRepository {
         String query = addSortingToQuery(String.format(SQL_GET_EMAILS_PER_FOLDER, userId, userId, folderName), sort);
         return jdbcTemplate.query(query,
                 BeanPropertyRowMapper.newInstance(EmailModel.class));
+    }
+
+    @Override
+    public Integer getFolderIdByName(Integer userId, String folderName) {
+        return jdbcTemplate.queryForObject(SQL_GET_FOLDER_ID_BY_NAME, new Object[]{userId, folderName}, Integer.class);
+    }
+
+    @Override
+    public void moveEmail(Integer emailId, Integer folderId) {
+        jdbcTemplate.update(String.format(SQL_MOVE_EMAIL_TO_FOLDER, folderId, emailId));
     }
 
     private String addSortingToQuery(String query, Integer sort) {

@@ -69,6 +69,19 @@ public class FoldersController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    @PostMapping("/moveemail")
+    public ResponseEntity<Map<String, Object>> moveEmail(@RequestHeader("Authorization") String authorization,
+                                                         @RequestParam("foldername") String folderName,
+                                                         @RequestParam Integer emailId) {
+        int userId = getUserId(authorization);
+        folderService.moveEmail(userId, emailId, folderName);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", "Email moved successfully!");
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
     private Integer getUserId(String authorization) {
         String[] authHeaders = authorization.split("Bearer ");
 

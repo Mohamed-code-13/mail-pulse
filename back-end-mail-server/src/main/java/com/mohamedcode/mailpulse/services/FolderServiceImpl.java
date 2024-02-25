@@ -45,4 +45,19 @@ public class FolderServiceImpl implements FolderService {
 
         return res;
     }
+
+    @Override
+    public void moveEmail(Integer userId, Integer emailId, String folderName) {
+        int folderCount = folderRepository.countFolderName(userId, folderName);
+        int emailCount = folderRepository.countEmailId(userId, emailId);
+        if (folderCount < 1) {
+            throw new CustomAuthException("No such folder with this name!");
+        } else if (emailCount < 1) {
+            throw new CustomAuthException("No such email with this id!");
+        }
+
+        Integer folderId = folderRepository.getFolderIdByName(userId, folderName);
+
+        folderRepository.moveEmail(emailId, folderId);
+    }
 }

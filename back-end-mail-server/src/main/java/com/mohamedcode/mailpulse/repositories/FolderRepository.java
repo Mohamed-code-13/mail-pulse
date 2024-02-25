@@ -11,7 +11,14 @@ public interface FolderRepository {
 
     Integer countFolderName(Integer userId, String folderName);
 
+    Integer countEmailId(Integer userId, Integer emailId);
+
     void deleteFolder(Integer userId, String folderName);
 
     List<EmailModel> getEmailsByFolder(Integer userId, String folderName, Integer sort, Integer page);
+
+    Integer getFolderIdByName(Integer userId, String folderName);
+
+    void moveEmail(Integer emailId, Integer folderId);
+
 }
