@@ -20,7 +20,7 @@ public class HomeRepositoryImpl implements HomeRepository {
                 ON sender.user_id = emails.sender_id
             JOIN users receiver
                 ON receiver.user_id = emails.receiver_id
-            WHERE deleted = FALSE AND receiver_id = 
+            WHERE deleted_by_receiver = FALSE AND receiver_id = 
             """;
     private static final String SQL_GET_EMAILS_BY_SENDER = """
             SELECT email_id, sender.email AS sender, receiver.email AS receiver, subject, body, priority, sent_date
@@ -29,7 +29,7 @@ public class HomeRepositoryImpl implements HomeRepository {
                 ON sender.user_id = emails.sender_id
             JOIN users receiver
                 ON receiver.user_id = emails.receiver_id
-            WHERE deleted = FALSE AND sender_id = 
+            WHERE deleted_by_sender = FALSE AND sender_id = 
             """;
     private static final String SQL_GET_TRASH_EMAILS_BY_USERID = """
             SELECT email_id, sender.email AS sender, receiver.email AS receiver, subject, body, priority, sent_date
@@ -38,7 +38,7 @@ public class HomeRepositoryImpl implements HomeRepository {
                 ON sender.user_id = emails.sender_id
             JOIN users receiver
                 ON receiver.user_id = emails.receiver_id
-            WHERE deleted = TRUE AND (receiver_id = %d OR sender_id = %d)
+            WHERE (receiver_id = %d AND deleted_by_receiver = TRUE) OR (sender_id = %d AND deleted_by_sender = TRUE)
             """;
 
     private static final String SQL_GET_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
