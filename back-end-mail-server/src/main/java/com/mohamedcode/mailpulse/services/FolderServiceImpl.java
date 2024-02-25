@@ -1,5 +1,6 @@
 package com.mohamedcode.mailpulse.services;
 
+import com.mohamedcode.mailpulse.exceptions.CustomAuthException;
 import com.mohamedcode.mailpulse.repositories.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void createFolder(Integer userId, String folderName) {
+        int count = folderRepository.countFolderName(userId, folderName);
+        if (count > 0)
+            throw new CustomAuthException("Folder name already exists!");
         folderRepository.createFolder(userId, folderName);
     }
 

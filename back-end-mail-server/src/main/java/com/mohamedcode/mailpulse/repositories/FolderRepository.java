@@ -9,6 +9,8 @@ public interface FolderRepository {
 
     void createFolder(Integer userId, String folderName);
 
+    Integer countFolderName(Integer userId, String folderName);
+
     void deleteFolder(Integer userId, String folderName);
 
     List<EmailModel> getEmailsByFolder(Integer userId, String folderName, Integer sort, Integer page);
