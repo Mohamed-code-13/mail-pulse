@@ -20,7 +20,7 @@ public class HomeRepositoryImpl implements HomeRepository {
                 ON sender.user_id = emails.sender_id
             JOIN users receiver
                 ON receiver.user_id = emails.receiver_id
-            WHERE receiver_id = 
+            WHERE deleted = FALSE AND receiver_id = 
             """;
 
     private static final String SQL_GET_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
@@ -41,16 +41,12 @@ public class HomeRepositoryImpl implements HomeRepository {
     }
 
     private String addSortingToQuery(String query, Integer sort) {
-        switch (sort) {
-            case 0:
-                return query + " ORDER BY email_id ASC";
-            case 1:
-                return query + " ORDER BY email_id DESC";
-            case 2:
-                return query + " ORDER BY priority DESC";
-            default:
-                return query + " ORDER BY email_id DESC";
-        }
+        return switch (sort) {
+            case 0 -> query + " ORDER BY email_id DESC";
+            case 1 -> query + " ORDER BY email_id ASC";
+            case 2 -> query + " ORDER BY priority DESC";
+            default -> query + " ORDER BY email_id DESC";
+        };
     }
 
     private final RowMapper<UserModel> userRowMapper = ((rs, rowNum) -> new UserModel(

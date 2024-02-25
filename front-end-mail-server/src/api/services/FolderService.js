@@ -12,13 +12,18 @@ class FolderService {
 
   async getInbox(token, sort, page) {
     const service = ApiService.getInstance()
+
     const headers = {
-      Authorization: `Bearer ${token}`,
-      sort,
-      page
+      Authorization: `Bearer ${token}`
     }
 
-    return await service.makeRequest('home/inbox', 'GET', null, true, headers)
+    return await service.makeRequest(
+      `home/inbox?sort=${sort}&page=${page}`,
+      'GET',
+      null,
+      true,
+      headers
+    )
     // return await service.makeRequest(`inbox?token=${token}&sort=${sort}&required=${page}`, 'GET')
   }
 
