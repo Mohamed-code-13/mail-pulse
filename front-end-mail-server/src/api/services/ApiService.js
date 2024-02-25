@@ -18,6 +18,7 @@ class ApiService {
       body = JSON.stringify(data)
     } else if (data) {
       body = data
+      console.log(body.get('subject'))
     }
 
     const options = {

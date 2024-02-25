@@ -187,9 +187,10 @@ export default {
       const email = createEmail()
       try {
         await emailAdapter.sendEmail(email)
-        await store.dispatch('getSent', { token: store.getters.token, sort: 0, page: 0 })
+        // await store.dispatch('getSent', { token: store.getters.token, sort: 0, page: 0 })
         closeCompose()
       } catch (e) {
+        console.log(e)
         errorMsg.value = JSON.parse(e).message
       }
     }
