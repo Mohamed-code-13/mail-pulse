@@ -22,6 +22,24 @@ public class HomeRepositoryImpl implements HomeRepository {
                 ON receiver.user_id = emails.receiver_id
             WHERE deleted = FALSE AND receiver_id = 
             """;
+    private static final String SQL_GET_EMAILS_BY_SENDER = """
+            SELECT email_id, sender.email AS sender, receiver.email AS receiver, subject, body, priority, sent_date
+            FROM emails
+            JOIN users sender
+                ON sender.user_id = emails.sender_id
+            JOIN users receiver
+                ON receiver.user_id = emails.receiver_id
+            WHERE deleted = FALSE AND sender_id = 
+            """;
+    private static final String SQL_GET_TRASH_EMAILS_BY_USERID = """
+            SELECT email_id, sender.email AS sender, receiver.email AS receiver, subject, body, priority, sent_date
+            FROM emails
+            JOIN users sender
+                ON sender.user_id = emails.sender_id
+            JOIN users receiver
+                ON receiver.user_id = emails.receiver_id
+            WHERE deleted = TRUE AND (receiver_id = %d OR sender_id = %d)
+            """;
 
     private static final String SQL_GET_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
 
@@ -34,8 +52,22 @@ public class HomeRepositoryImpl implements HomeRepository {
     }
 
     @Override
-    public List<EmailModel> getEmailsByReceiverId(Integer userId, Integer sort) {
+    public List<EmailModel> getEmailsByReceiverId(Integer userId, Integer sort, Integer page) {
         String query = addSortingToQuery(SQL_GET_EMAILS_BY_RECEIVER + userId, sort);
+        return jdbcTemplate.query(query,
+                BeanPropertyRowMapper.newInstance(EmailModel.class));
+    }
+
+    @Override
+    public List<EmailModel> getEmailsBySenderId(Integer userId, Integer sort, Integer page) {
+        String query = addSortingToQuery(SQL_GET_EMAILS_BY_SENDER + userId, sort);
+        return jdbcTemplate.query(query,
+                BeanPropertyRowMapper.newInstance(EmailModel.class));
+    }
+
+    @Override
+    public List<EmailModel> getTrashByUserId(Integer userId, Integer sort, Integer page) {
+        String query = addSortingToQuery(String.format(SQL_GET_TRASH_EMAILS_BY_USERID, userId, userId), sort);
         return jdbcTemplate.query(query,
                 BeanPropertyRowMapper.newInstance(EmailModel.class));
     }

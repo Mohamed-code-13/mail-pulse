@@ -29,12 +29,36 @@ class FolderService {
 
   async getSent(token, sort, page) {
     const service = ApiService.getInstance()
-    return await service.makeRequest(`sent?token=${token}&sort=${sort}&required=${page}`, 'GET')
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+
+    return await service.makeRequest(
+      `home/sent?sort=${sort}&page=${page}`,
+      'GET',
+      null,
+      true,
+      headers
+    )
+    // return await service.makeRequest(`sent?token=${token}&sort=${sort}&required=${page}`, 'GET')
   }
 
   async getTrash(token, sort, page) {
     const service = ApiService.getInstance()
-    return await service.makeRequest(`trash?token=${token}&sort=${sort}&required=${page}`, 'GET')
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+
+    return await service.makeRequest(
+      `home/trash?sort=${sort}&page=${page}`,
+      'GET',
+      null,
+      true,
+      headers
+    )
+    // return await service.makeRequest(`trash?token=${token}&sort=${sort}&required=${page}`, 'GET')
   }
 
   async getDraft(token, sort, page) {

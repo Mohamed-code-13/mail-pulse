@@ -25,8 +25,30 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public List<Map<String, Object>> getInbox(Integer userId, Integer sort) {
-        var emails = homeRepository.getEmailsByReceiverId(userId, sort);
+    public List<Map<String, Object>> getInbox(Integer userId, Integer sort, Integer page) {
+        var emails = homeRepository.getEmailsByReceiverId(userId, sort, page);
+        List<Map<String, Object>> res = new ArrayList<>();
+
+        for (var email : emails)
+            res.add(convertEmailToMap(email));
+
+        return res;
+    }
+
+    @Override
+    public List<Map<String, Object>> getSent(Integer userId, Integer sort, Integer page) {
+        var emails = homeRepository.getEmailsBySenderId(userId, sort, page);
+        List<Map<String, Object>> res = new ArrayList<>();
+
+        for (var email : emails)
+            res.add(convertEmailToMap(email));
+
+        return res;
+    }
+
+    @Override
+    public List<Map<String, Object>> getTrash(Integer userId, Integer sort, Integer page) {
+        var emails = homeRepository.getTrashByUserId(userId, sort, page);
         List<Map<String, Object>> res = new ArrayList<>();
 
         for (var email : emails)

@@ -8,6 +8,9 @@ import java.util.Map;
 public interface HomeService {
     UserModel getUserById(Integer userId);
 
-    List<Map<String, Object>> getInbox(Integer userId, Integer sort);
+    List<Map<String, Object>> getInbox(Integer userId, Integer sort, Integer page);
 
+    List<Map<String, Object>> getSent(Integer userId, Integer sort, Integer page);
+
+    List<Map<String, Object>> getTrash(Integer userId, Integer sort, Integer page);
 }
