@@ -54,6 +54,11 @@ public class FolderServiceImpl implements FolderService {
     }
 
     private void moveEmail(Integer userId, Integer emailId, String folderName) {
+        if (folderName.equals("inbox")) {
+            folderRepository.resetEmailFolder(emailId);
+            return;
+        }
+
         int folderCount = folderRepository.countFolderName(userId, folderName);
         int emailCount = folderRepository.countEmailId(userId, emailId);
         if (folderCount < 1) {

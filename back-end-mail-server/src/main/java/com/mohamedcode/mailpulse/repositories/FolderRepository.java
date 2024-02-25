@@ -21,4 +21,6 @@ public interface FolderRepository {
 
     void moveEmail(Integer emailId, Integer folderId);
 
+    void resetEmailFolder(Integer emailId);
+
 }

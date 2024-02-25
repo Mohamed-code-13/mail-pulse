@@ -53,6 +53,11 @@ public class FolderRepositoryImpl implements FolderRepository {
             SET folder_receiver = %d
             WHERE email_id = %d
             """;
+    private static final String SQL_RESET_EMAIL_FOLDER = """
+            UPDATE emails
+            SET folder_receiver = NULL
+            WHERE email_id = %d
+            """;
     private static final String SQL_GET_FOLDER_ID_BY_NAME = "SELECT folder_id FROM folders WHERE user_id = ? AND folder_name = ?";
     private static final String SQL_DELETE_FOLDER = "DELETE FROM folders WHERE user_id = ? AND folder_name = ?";
 
@@ -100,6 +105,11 @@ public class FolderRepositoryImpl implements FolderRepository {
     @Override
     public void moveEmail(Integer emailId, Integer folderId) {
         jdbcTemplate.update(String.format(SQL_MOVE_EMAIL_TO_FOLDER, folderId, emailId));
+    }
+
+    @Override
+    public void resetEmailFolder(Integer emailId) {
+        jdbcTemplate.update(String.format(SQL_RESET_EMAIL_FOLDER, emailId));
     }
 
     private String addSortingToQuery(String query, Integer sort) {
