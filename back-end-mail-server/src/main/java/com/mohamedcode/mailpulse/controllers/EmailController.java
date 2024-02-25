@@ -47,7 +47,7 @@ public class EmailController {
                                                            @RequestParam Integer email_id) {
         Integer userId = getUserId(authorization);
 
-        emailService.deleteEmail(email_id);
+        emailService.deleteEmail(userId, email_id);
 
         Map<String, Object> map = new HashMap<>();
         map.put("message", "Email deleted successfully!");
