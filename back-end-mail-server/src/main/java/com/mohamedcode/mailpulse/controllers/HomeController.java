@@ -11,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,9 +40,37 @@ public class HomeController {
                                                         @RequestParam Integer sort,
                                                         @RequestParam Integer page) {
         int userId = getUserId(authorization);
-        var inbox = homeService.getInbox(userId, sort);
+        var inbox = homeService.getInbox(userId, sort, page);
         Map<String, Object> map = new HashMap<>();
         map.put("list", inbox);
+        map.put("current", 1);
+        map.put("total", 2);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/sent")
+    public ResponseEntity<Map<String, Object>> getSent(@RequestHeader("Authorization") String authorization,
+                                                       @RequestParam Integer sort,
+                                                       @RequestParam Integer page) {
+        int userId = getUserId(authorization);
+        var sent = homeService.getSent(userId, sort, page);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", sent);
+        map.put("current", 1);
+        map.put("total", 2);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @GetMapping("/trash")
+    public ResponseEntity<Map<String, Object>> getTrash(@RequestHeader("Authorization") String authorization,
+                                                       @RequestParam Integer sort,
+                                                       @RequestParam Integer page) {
+        int userId = getUserId(authorization);
+        var trash = homeService.getTrash(userId, sort, page);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", trash);
         map.put("current", 1);
         map.put("total", 2);
 
