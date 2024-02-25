@@ -46,7 +46,7 @@ public class FolderRepositoryImpl implements FolderRepository {
             WHERE
                 ((deleted_by_sender = FALSE AND sender_id = %d)
                  OR (deleted_by_receiver = FALSE AND receiver_id = %d))
-                AND fold.folder_name = '%s'
+                AND folder_receiver = %d
             """;
     private static final String SQL_MOVE_EMAIL_TO_FOLDER = """
             UPDATE emails
@@ -86,7 +86,8 @@ public class FolderRepositoryImpl implements FolderRepository {
 
     @Override
     public List<EmailModel> getEmailsByFolder(Integer userId, String folderName, Integer sort, Integer page) {
-        String query = addSortingToQuery(String.format(SQL_GET_EMAILS_PER_FOLDER, userId, userId, folderName), sort);
+        Integer folderId = getFolderIdByName(userId, folderName);
+        String query = addSortingToQuery(String.format(SQL_GET_EMAILS_PER_FOLDER, userId, userId, folderId), sort);
         return jdbcTemplate.query(query,
                 BeanPropertyRowMapper.newInstance(EmailModel.class));
     }

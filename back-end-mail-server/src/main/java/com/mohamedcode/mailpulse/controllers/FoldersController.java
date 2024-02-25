@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,8 +34,10 @@ public class FoldersController {
 
     @PostMapping("/createfolder")
     public ResponseEntity<Map<String, Object>> createFolder(@RequestHeader("Authorization") String authorization,
-                                                            @RequestParam("foldername") String folderName) {
+                                                            @RequestBody Map<String, Object> body) {
         int userId = getUserId(authorization);
+        String folderName = (String) body.get("foldername");
+
         folderService.createFolder(userId, folderName);
 
         Map<String, Object> map = new HashMap<>();
@@ -44,8 +47,10 @@ public class FoldersController {
 
     @DeleteMapping("/deletefolder")
     public ResponseEntity<Map<String, Object>> deleteFolder(@RequestHeader("Authorization") String authorization,
-                                                            @RequestParam("foldername") String folderName) {
+                                                            @RequestBody Map<String, Object> body) {
         int userId = getUserId(authorization);
+        String folderName = (String) body.get("foldername");
+
         folderService.deleteFolder(userId, folderName);
 
         Map<String, Object> map = new HashMap<>();
@@ -69,12 +74,14 @@ public class FoldersController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @PostMapping("/moveemail")
+    @PutMapping("/moveemail")
     public ResponseEntity<Map<String, Object>> moveEmail(@RequestHeader("Authorization") String authorization,
-                                                         @RequestParam("foldername") String folderName,
-                                                         @RequestParam Integer emailId) {
+                                                         @RequestBody Map<String, Object> body) {
         int userId = getUserId(authorization);
-        folderService.moveEmail(userId, emailId, folderName);
+        List<Integer> emailIds = (List<Integer>)  body.get("id");
+        String folderName = (String) body.get("foldername");
+
+        folderService.moveEmails(userId, emailIds, folderName);
 
         Map<String, Object> map = new HashMap<>();
         map.put("message", "Email moved successfully!");

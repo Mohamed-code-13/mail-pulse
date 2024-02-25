@@ -68,31 +68,69 @@ class FolderService {
 
   async getFolders(token) {
     const service = ApiService.getInstance()
-    return await service.makeRequest(`folders?token=${token}`, 'GET')
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+
+    return await service.makeRequest(`folders/getfolders`, 'GET', null, true, headers)
+    // return await service.makeRequest(`folders/getfolders?token=${token}`, 'GET')
   }
 
   async createFolder(token, foldername) {
     const service = ApiService.getInstance()
-    return await service.makeRequest('createfolder', 'POST', {
-      token,
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+
+      'Content-Type': 'application/json'
+    }
+    const body = {
       foldername
-    })
+    }
+
+    return await service.makeRequest(`folders/createfolder`, 'POST', body, true, headers)
+    // return await service.makeRequest('createfolder', 'POST', {
+    //   token,
+    //   foldername
+    // })
   }
 
   async getFolderEmails(token, sort, foldername, page) {
     const service = ApiService.getInstance()
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+
     return await service.makeRequest(
-      `folderemails?token=${token}&foldername=${foldername}&sort=${sort}&required=${page}`,
-      'GET'
+      `folders/folderemails?token=${token}&foldername=${foldername}&sort=${sort}&page=${page}`,
+      'GET',
+      null,
+      true,
+      headers
     )
+    // return await service.makeRequest(
+    //   `folderemails?token=${token}&foldername=${foldername}&sort=${sort}&required=${page}`,
+    //   'GET'
+    // )
   }
 
   async deleteFolder(token, foldername) {
     const service = ApiService.getInstance()
-    return await service.makeRequest('deletefolder', 'DELETE', {
-      token,
+
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+    const body = {
       foldername
-    })
+    }
+
+    return await service.makeRequest(`folders/deletefolder`, 'DELETE', body, true, headers)
+    // return await service.makeRequest('deletefolder', 'DELETE', {
+    //   token,
+    //   foldername
+    // })
   }
 }
 

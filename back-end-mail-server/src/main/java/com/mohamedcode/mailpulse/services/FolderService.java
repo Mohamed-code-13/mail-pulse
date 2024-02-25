@@ -13,5 +13,5 @@ public interface FolderService {
 
     List<Map<String, Object>> getEmailsByFolder(Integer userId, String folderName, Integer sort, Integer page);
 
-    void moveEmail(Integer userId, Integer emailId, String folderName);
+    void moveEmails(Integer userId, List<Integer> emailIds, String folderName);
 }

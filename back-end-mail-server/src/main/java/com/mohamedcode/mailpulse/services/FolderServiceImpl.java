@@ -47,7 +47,13 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void moveEmail(Integer userId, Integer emailId, String folderName) {
+    public void moveEmails(Integer userId, List<Integer> emailIds, String folderName) {
+        for (Integer id : emailIds) {
+            moveEmail(userId, id, folderName);
+        }
+    }
+
+    private void moveEmail(Integer userId, Integer emailId, String folderName) {
         int folderCount = folderRepository.countFolderName(userId, folderName);
         int emailCount = folderRepository.countEmailId(userId, emailId);
         if (folderCount < 1) {
