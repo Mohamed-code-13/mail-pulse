@@ -1,5 +1,8 @@
 package com.mohamedcode.mailpulse.models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EmailModel {
     public Integer emailId;
     public String sender;
@@ -75,5 +78,19 @@ public class EmailModel {
 
     public void setSent_date(String sent_date) {
         this.sent_date = sent_date;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("email_id", this.getEmailId());
+        map.put("sender", this.getSender());
+        map.put("receiver", this.getReceiver());
+        map.put("subject", this.getSubject());
+        map.put("body", this.getBody());
+        map.put("priority", this.getPriority());
+        map.put("sentDate", this.getSent_date());
+
+        return map;
     }
 }

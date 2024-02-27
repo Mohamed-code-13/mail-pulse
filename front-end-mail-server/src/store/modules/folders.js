@@ -99,7 +99,8 @@ const actions = {
     commit('getFolderMails', { mails, current, total, curFolderName })
   },
   async getFolders({ commit }, { token }) {
-    const folders = await api.folder.getFolders(token)
+    const res = await api.folder.getFolders(token)
+    const folders = res.folders
 
     commit('getFolders', folders)
   },
