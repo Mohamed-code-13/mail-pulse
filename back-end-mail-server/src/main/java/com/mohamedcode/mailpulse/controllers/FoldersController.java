@@ -47,9 +47,8 @@ public class FoldersController {
 
     @DeleteMapping("/deletefolder")
     public ResponseEntity<Map<String, Object>> deleteFolder(@RequestHeader("Authorization") String authorization,
-                                                            @RequestBody Map<String, Object> body) {
+                                                            @RequestParam("foldername") String folderName) {
         int userId = getUserId(authorization);
-        String folderName = (String) body.get("foldername");
 
         folderService.deleteFolder(userId, folderName);
 

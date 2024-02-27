@@ -126,7 +126,13 @@ class FolderService {
       foldername
     }
 
-    return await service.makeRequest(`folders/deletefolder`, 'DELETE', body, true, headers)
+    return await service.makeRequest(
+      `folders/deletefolder?foldername=${foldername}`,
+      'DELETE',
+      null,
+      true,
+      headers
+    )
     // return await service.makeRequest('deletefolder', 'DELETE', {
     //   token,
     //   foldername
