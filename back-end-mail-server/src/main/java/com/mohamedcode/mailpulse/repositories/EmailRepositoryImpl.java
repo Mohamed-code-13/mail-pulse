@@ -49,6 +49,16 @@ public class EmailRepositoryImpl implements EmailRepository {
     private static final String SQL_GET_EMAIL_RECEIVER = "SELECT receiver_id FROM emails WHERE email_id = ?";
     private static final String SQL_DELETE_EMAIL_BY_ID = "DELETE FROM emails WHERE email_id = ?";
     private static final String SQL_GET_USER_ID_BY_EMAIL = "SELECT user_id FROM users WHERE email = ?";
+    private static final String SQL_RESTORE_EMAIL_FROM_SENDER_TRASH = """
+            UPDATE emails
+            SET deleted_by_sender = FALSE
+            WHERE email_id = ?
+            """;
+    private static final String SQL_RESTORE_EMAIL_FROM_RECEIVER_TRASH = """
+            UPDATE emails
+            SET deleted_by_receiver = FALSE
+            WHERE email_id = ?
+            """;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -73,9 +83,14 @@ public class EmailRepositoryImpl implements EmailRepository {
 
     @Override
     public void restoreEmail(Integer userId, Integer emailID) {
-
+        if (userId.equals(getEmailSender(emailID))) {
+            if (isEmailInSenderTrash(emailID))
+                restoreEmailFromSenderTrash(emailID);
+        } else if (userId.equals(getEmailReceiver(emailID))) {
+            if (isEmailInReceiverTrash(emailID))
+                restoreEmailFromReceiverTrash(emailID);
+        }
     }
-
 
     @Override
     public void sendEmail(Integer senderId, String receiver,
@@ -113,6 +128,14 @@ public class EmailRepositoryImpl implements EmailRepository {
 
     private void deleteEmailFromReceiverTrash(Integer emailId) {
         jdbcTemplate.update(SQL_DELETE_EMAIL_FROM_RECEIVER_TRASH, emailId);
+    }
+
+    private void restoreEmailFromSenderTrash(Integer emailId) {
+        jdbcTemplate.update(SQL_RESTORE_EMAIL_FROM_SENDER_TRASH, emailId);
+    }
+
+    private void restoreEmailFromReceiverTrash(Integer emailId) {
+        jdbcTemplate.update(SQL_RESTORE_EMAIL_FROM_RECEIVER_TRASH, emailId);
     }
 
     private void moveEmailToSenderTrash(Integer emailId) {

@@ -73,10 +73,16 @@ class EmailService {
   async restoreMail(token, id) {
     const service = ApiService.getInstance()
 
-    return await service.makeRequest('restore', 'PUT', {
-      token,
-      id
-    })
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+
+    return await service.makeRequest(`email/restore?email_id=${id}`, 'PUT', null, true, headers)
+    // return await service.makeRequest('email/restore', 'PUT', {
+    //   token,
+    //   id
+    // })
   }
 }
 
