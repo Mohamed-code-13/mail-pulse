@@ -44,13 +44,25 @@ public class EmailController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<Map<String, Object>> deleteEmail(@RequestHeader("Authorization") String authorization,
-                                                           @RequestParam Integer email_id) {
+                                                           @RequestParam("email_id") List<Integer> email_ids) {
         Integer userId = getUserId(authorization);
 
-        emailService.deleteEmail(userId, email_id);
+        emailService.deleteEmail(userId, email_ids);
 
         Map<String, Object> map = new HashMap<>();
         map.put("message", "Email deleted successfully!");
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    @PutMapping("/restore")
+    public ResponseEntity<Map<String, Object>> restoreEmail(@RequestHeader("Authorization") String authorization,
+                                                            @RequestParam("email_id") List<Integer> email_ids) {
+        Integer userId = getUserId(authorization);
+
+        emailService.restoreEmail(userId, email_ids);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", "Email restored successfully!");
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
