@@ -53,11 +53,21 @@ class EmailService {
   async moveMail(token, id, foldername) {
     const service = ApiService.getInstance()
 
-    return await service.makeRequest('movemails', 'PUT', {
-      token,
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+    const body = {
       id,
       foldername
-    })
+    }
+
+    return await service.makeRequest(`folders/moveemail`, 'PUT', body, true, headers)
+    // return await service.makeRequest('movemails', 'PUT', {
+    //   token,
+    //   id,
+    //   foldername
+    // })
   }
 
   async restoreMail(token, id) {

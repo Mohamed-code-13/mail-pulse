@@ -30,7 +30,7 @@ public class HomeServiceImpl implements HomeService {
         List<Map<String, Object>> res = new ArrayList<>();
 
         for (var email : emails)
-            res.add(convertEmailToMap(email));
+            res.add(email.toMap());
 
         return res;
     }
@@ -41,7 +41,7 @@ public class HomeServiceImpl implements HomeService {
         List<Map<String, Object>> res = new ArrayList<>();
 
         for (var email : emails)
-            res.add(convertEmailToMap(email));
+            res.add(email.toMap());
 
         return res;
     }
@@ -52,22 +52,8 @@ public class HomeServiceImpl implements HomeService {
         List<Map<String, Object>> res = new ArrayList<>();
 
         for (var email : emails)
-            res.add(convertEmailToMap(email));
+            res.add(email.toMap());
 
         return res;
-    }
-
-    private Map<String, Object> convertEmailToMap(EmailModel emailModel) {
-        Map<String, Object> map = new HashMap<>();
-
-        map.put("email_id", emailModel.getEmailId());
-        map.put("sender", emailModel.getSender());
-        map.put("receiver", emailModel.getReceiver());
-        map.put("subject", emailModel.getSubject());
-        map.put("body", emailModel.getBody());
-        map.put("priority", emailModel.getPriority());
-        map.put("sentDate", emailModel.getSent_date());
-
-        return map;
     }
 }
