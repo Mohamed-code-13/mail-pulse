@@ -15,16 +15,18 @@ public class EmailServiceImpl implements EmailService {
     EmailRepository emailRepository;
 
     @Override
-    public void deleteEmail(Integer userId, Integer emailID) {
+    public void deleteEmail(Integer userId, List<Integer> email_ids) {
         // delete email from the current folder
         // add the deleted email to the trash folder
         // if the email in the trash folder delete it from the db
-        emailRepository.deleteEmail(userId, emailID);
+        for (Integer id : email_ids)
+            emailRepository.deleteEmail(userId, id);
     }
 
     @Override
-    public void restoreEmail(Integer userId, Integer emailID) {
-        emailRepository.restoreEmail(userId, emailID);
+    public void restoreEmail(Integer userId, List<Integer> email_ids) {
+        for (Integer id : email_ids)
+            emailRepository.restoreEmail(userId, id);
     }
 
     @Override
