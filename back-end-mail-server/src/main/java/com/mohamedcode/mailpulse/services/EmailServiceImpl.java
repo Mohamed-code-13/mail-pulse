@@ -23,6 +23,11 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public void restoreEmail(Integer userId, Integer emailID) {
+        emailRepository.restoreEmail(userId, emailID);
+    }
+
+    @Override
     public void sendEmail(Integer senderId, List<String> receivers,
                           String subject, String body, Integer priority,
                           List<MultipartFile> files) {

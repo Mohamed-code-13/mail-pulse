@@ -71,6 +71,11 @@ public class EmailRepositoryImpl implements EmailRepository {
             deleteEmailFromDB(emailID);
     }
 
+    @Override
+    public void restoreEmail(Integer userId, Integer emailID) {
+        
+    }
+
 
     @Override
     public void sendEmail(Integer senderId, String receiver,

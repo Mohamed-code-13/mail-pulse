@@ -54,6 +54,18 @@ public class EmailController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
+    @PutMapping("/restore")
+    public ResponseEntity<Map<String, Object>> restoreEmail(@RequestHeader("Authorization") String authorization,
+                                                            @RequestParam Integer email_id) {
+        Integer userId = getUserId(authorization);
+
+        emailService.restoreEmail(userId, email_id);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", "Email restored successfully!");
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
     private Integer getUserId(String authorization) {
         String[] authHeaders = authorization.split("Bearer ");
 
