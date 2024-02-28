@@ -3,8 +3,10 @@ package com.mohamedcode.mailpulse.controllers;
 
 import com.mohamedcode.mailpulse.Constants;
 import com.mohamedcode.mailpulse.exceptions.CustomAuthException;
+import com.mohamedcode.mailpulse.services.ContactsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +20,18 @@ import java.util.Map;
 @CrossOrigin("*")
 public class ContactsController {
 
+    @Autowired
+    ContactsService contactsService;
+
     @GetMapping("/getcontacts")
     public ResponseEntity<Map<String, Object>> getContacts(@RequestParam("token") String authorization) {
         Integer userId = getUserId(authorization);
 
         Map<String, Object> map = new HashMap<>();
+
+        Map<String, Object> contacts = contactsService.getContacts(userId);
+        map.put("contacts", contacts);
+
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -31,7 +40,14 @@ public class ContactsController {
                                                              @RequestBody Map<String, Object> body) {
         Integer userId = getUserId(authorization);
 
+        String name = (String) body.get("name");
+        List<String> emails = (List<String>) body.get("emails");
+
+        contactsService.createContact(userId, name, emails);
+
         Map<String, Object> map = new HashMap<>();
+        map.put("message", "Contact created successfully!");
+
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -40,7 +56,11 @@ public class ContactsController {
                                                              @RequestParam List<Integer> contactIds) {
         Integer userId = getUserId(authorization);
 
+        contactsService.deleteContact(userId, contactIds);
+
         Map<String, Object> map = new HashMap<>();
+        map.put("message", "Contact deleted successfully!");
+
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -49,7 +69,15 @@ public class ContactsController {
                                                              @RequestBody Map<String, Object> body) {
         Integer userId = getUserId(authorization);
 
+        Integer contactId = (Integer) body.get("contactId");
+        String name = (String) body.get("name");
+        List<String> emails = (List<String>) body.get("emails");
+
+        contactsService.updateContact(userId, contactId, name, emails);
+
         Map<String, Object> map = new HashMap<>();
+        map.put("message", "Contact updated successfully!");
+
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 

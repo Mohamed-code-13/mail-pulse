@@ -13,6 +13,5 @@ public interface ContactsRepository {
     void deleteContact(Integer userId, Integer contactId);
 
     void updateContact(Integer userId, Integer contactId, String name, String email);
-    
 
 }
