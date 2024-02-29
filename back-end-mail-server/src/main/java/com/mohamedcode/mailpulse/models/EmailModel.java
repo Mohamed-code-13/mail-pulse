@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EmailModel {
-    public Integer emailId;
-    public String sender;
-    public String receiver;
-    public String subject;
-    public String body;
-    public Integer priority;
-    public String sent_date;
+    private Integer emailId;
+    private String sender;
+    private String receiver;
+    private String subject;
+    private String body;
+    private Integer priority;
+    private String sent_date;
 
     public EmailModel() {}
 

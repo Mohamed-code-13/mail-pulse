@@ -105,7 +105,8 @@ const actions = {
     commit('getFolders', folders)
   },
   async getAllContacts({ commit }, { token }) {
-    const currContacts = await api.contactsService.getContacts(token)
+    const res = await api.contactsService.getContacts(token)
+    const currContacts = res.contacts
 
     commit('getAllContacts', currContacts)
   },

@@ -43,6 +43,7 @@ export default {
   setup(props) {
     const store = useStore()
     const showContactDialog = ref(false)
+    console.log(props.person)
 
     const closeContact = () => {
       showContactDialog.value = false
