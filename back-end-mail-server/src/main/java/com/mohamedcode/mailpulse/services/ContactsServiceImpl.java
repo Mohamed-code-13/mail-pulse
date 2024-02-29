@@ -47,32 +47,34 @@ public class ContactsServiceImpl implements ContactsService {
 
     @Override
     public void createContact(Integer userId, String name, List<String> emails) {
-        if (contactsRepository.contactExist(userId, name))
+        if (contactsRepository.contactCount(userId, name) > 0)
             return;
 
         contactsRepository.createContactName(userId, name);
         Integer contactId = contactsRepository.getContactId(userId, name);
 
         for (String email : emails) {
-            if (!contactsRepository.contactEmailExist(userId, contactId, email))
+            if (contactsRepository.contactEmailCount(contactId, email) == 0)
                 contactsRepository.createEmailContact(userId, contactId, email);
         }
     }
 
     @Override
-    public void deleteContact(Integer userId, List<Integer> contactIds) {
-        for (Integer contactId : contactIds)
-            contactsRepository.deleteContact(userId, contactId);
+    public void deleteContact(List<Integer> contactIds) {
+        for (Integer contactId : contactIds) {
+            contactsRepository.deleteEmailContact(contactId);
+            contactsRepository.deleteContact(contactId);
+        }
     }
 
     @Override
     public void updateContact(Integer userId, Integer contactId, String name, List<String> emails) {
-        if (!contactsRepository.contactExist(userId, name))
+        if (contactsRepository.contactCount(userId, name) == 0)
             return;
 
-        contactsRepository.updateContactName(userId, contactId, name);
+        contactsRepository.updateContactName(contactId, name);
         for (String email : emails) {
-            if (!contactsRepository.contactEmailExist(userId, contactId, email))
+            if (contactsRepository.contactEmailCount(contactId, email) == 0)
                 contactsRepository.createEmailContact(userId, contactId, email);
         }
     }

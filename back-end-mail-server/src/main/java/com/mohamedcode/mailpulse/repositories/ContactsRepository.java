@@ -14,12 +14,14 @@ public interface ContactsRepository {
 
     void createEmailContact(Integer userId, Integer contactId, String email);
 
-    Boolean contactExist(Integer userId, String name);
+    Integer contactCount(Integer userId, String name);
 
-    Boolean contactEmailExist(Integer userId, Integer contactId, String email);
+    Integer contactEmailCount(Integer contactId, String email);
 
-    void deleteContact(Integer userId, Integer contactId);
+    void deleteContact(Integer contactId);
 
-    void updateContactName(Integer userId, Integer contactId, String name);
+    void deleteEmailContact(Integer contactId);
+
+    void updateContactName(Integer contactId, String name);
 
 }

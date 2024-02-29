@@ -9,7 +9,7 @@ public interface ContactsService {
 
     void createContact(Integer userId, String name, List<String> emails);
 
-    void deleteContact(Integer userId, List<Integer> contactIds);
+    void deleteContact(List<Integer> contactIds);
 
     void updateContact(Integer userId, Integer contactId, String name, List<String> emails);
     
