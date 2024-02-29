@@ -1,12 +1,25 @@
 package com.mohamedcode.mailpulse.models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Contact {
+    private Integer contactId;
     private String name;
     private String email;
 
-    public Contact(String name, String email) {
+    public Contact(Integer contactId, String name, String email) {
+        this.contactId = contactId;
         this.name = name;
         this.email = email;
+    }
+
+    public Integer getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
     public String getName() {

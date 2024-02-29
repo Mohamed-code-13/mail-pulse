@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface ContactsService {
 
-    Map<String, Object> getContacts(Integer userId);
+    List<Map<String, Object>> getContacts(Integer userId);
 
     void createContact(Integer userId, String name, List<String> emails);
 

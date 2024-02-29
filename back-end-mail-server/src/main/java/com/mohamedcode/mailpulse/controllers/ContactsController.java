@@ -29,7 +29,7 @@ public class ContactsController {
 
         Map<String, Object> map = new HashMap<>();
 
-        Map<String, Object> contacts = contactsService.getContacts(userId);
+        List<Map<String, Object>> contacts = contactsService.getContacts(userId);
         map.put("contacts", contacts);
 
         return new ResponseEntity<>(map, HttpStatus.OK);
