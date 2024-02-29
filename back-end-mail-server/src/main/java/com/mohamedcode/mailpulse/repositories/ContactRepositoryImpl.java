@@ -12,11 +12,14 @@ import java.util.List;
 public class ContactRepositoryImpl implements ContactsRepository {
 
     private static final String SQL_GET_CONTACTS_PER_USER = """
-            SELECT cnt.contact_id, cnt.contact_name, ecnt.email
+            SELECT
+                cnt.contact_id AS contact_id,
+                cnt.contact_name AS name,
+                ecnt.email AS email
             FROM contacts cnt
             LEFT JOIN email_contact ecnt
             	ON cnt.contact_id = ecnt.contact_id
-            WHERE cnt.user_id = 
+            WHERE cnt.user_id =
             """;
     private static final String SQL_COUNT_CONTACT_NAME_PER_USER = """
             SELECT COUNT(*)

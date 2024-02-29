@@ -24,7 +24,7 @@ public class ContactsServiceImpl implements ContactsService {
         Map<Integer, Map<String, Object>> map = new HashMap<>();
 
         for (Contact contact : contacts) {
-            Integer contactId = contact.getContactId();
+            Integer contactId = contact.getContact_id();
             String name = contact.getName();
             String email = contact.getEmail();
 
@@ -42,7 +42,11 @@ public class ContactsServiceImpl implements ContactsService {
             curEmails.add(email);
         }
 
-        return (List<Map<String, Object>>) map.values();
+        List<Map<String, Object>> res = new ArrayList<>();
+        for (Integer key : map.keySet())
+            res.add(map.get(key));
+
+        return res;
     }
 
     @Override
@@ -69,13 +73,10 @@ public class ContactsServiceImpl implements ContactsService {
 
     @Override
     public void updateContact(Integer userId, Integer contactId, String name, List<String> emails) {
-        if (contactsRepository.contactCount(userId, name) == 0)
-            return;
-
         contactsRepository.updateContactName(contactId, name);
+        contactsRepository.deleteEmailContact(contactId);
         for (String email : emails) {
-            if (contactsRepository.contactEmailCount(contactId, email) == 0)
-                contactsRepository.createEmailContact(userId, contactId, email);
+            contactsRepository.createEmailContact(userId, contactId, email);
         }
     }
 }

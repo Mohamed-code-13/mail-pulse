@@ -24,7 +24,7 @@ public class ContactsController {
     ContactsService contactsService;
 
     @GetMapping("/getcontacts")
-    public ResponseEntity<Map<String, Object>> getContacts(@RequestParam("token") String authorization) {
+    public ResponseEntity<Map<String, Object>> getContacts(@RequestHeader("Authorization") String authorization) {
         Integer userId = getUserId(authorization);
 
         Map<String, Object> map = new HashMap<>();
@@ -36,7 +36,7 @@ public class ContactsController {
     }
 
     @PostMapping("/createcontact")
-    public ResponseEntity<Map<String, Object>> createContact(@RequestParam("token") String authorization,
+    public ResponseEntity<Map<String, Object>> createContact(@RequestHeader("Authorization") String authorization,
                                                              @RequestBody Map<String, Object> body) {
         Integer userId = getUserId(authorization);
 
@@ -52,11 +52,11 @@ public class ContactsController {
     }
 
     @DeleteMapping("/deletecontact")
-    public ResponseEntity<Map<String, Object>> deleteContact(@RequestParam("token") String authorization,
-                                                             @RequestParam List<Integer> contactIds) {
+    public ResponseEntity<Map<String, Object>> deleteContact(@RequestHeader("Authorization") String authorization,
+                                                             @RequestParam("contactids") List<Integer> contactIds) {
         Integer userId = getUserId(authorization);
 
-        contactsService.deleteContact(userId, contactIds);
+        contactsService.deleteContact(contactIds);
 
         Map<String, Object> map = new HashMap<>();
         map.put("message", "Contact deleted successfully!");
@@ -65,7 +65,7 @@ public class ContactsController {
     }
 
     @PutMapping("/updatecontact")
-    public ResponseEntity<Map<String, Object>> updateContact(@RequestParam("token") String authorization,
+    public ResponseEntity<Map<String, Object>> updateContact(@RequestHeader("Authorization") String authorization,
                                                              @RequestBody Map<String, Object> body) {
         Integer userId = getUserId(authorization);
 
