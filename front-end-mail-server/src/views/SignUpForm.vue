@@ -45,7 +45,7 @@ export default {
         })
         router.push('/home/inbox')
       } catch (e) {
-        errorMsg.value = JSON.parse(e).msg
+        errorMsg.value = JSON.parse(e).message
       }
     }
 

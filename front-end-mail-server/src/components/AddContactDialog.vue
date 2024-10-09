@@ -87,7 +87,7 @@ export default {
 
         ctx.emit('closeContact')
       } catch (e) {
-        errorMsg.value = JSON.parse(e).msg
+        errorMsg.value = JSON.parse(e).message
       }
     }
 
@@ -101,7 +101,7 @@ export default {
 
         ctx.emit('closeContact')
       } catch (e) {
-        errorMsg.value = JSON.parse(e).msg
+        errorMsg.value = JSON.parse(e).message
       }
     }
 

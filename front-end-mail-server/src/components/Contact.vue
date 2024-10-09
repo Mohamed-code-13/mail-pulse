@@ -6,7 +6,7 @@
       </summary>
 
       <ol class="emails">
-        <div v-for="email in person.emails" id="email" :key="email.id">
+        <div v-for="email in person.emails" id="email" :key="email.email_id">
           <li>
             {{ email }}
           </li>
@@ -43,6 +43,7 @@ export default {
   setup(props) {
     const store = useStore()
     const showContactDialog = ref(false)
+    console.log(props.person)
 
     const closeContact = () => {
       showContactDialog.value = false

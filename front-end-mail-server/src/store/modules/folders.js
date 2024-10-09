@@ -62,6 +62,7 @@ const actions = {
     const mails = response.list
     const current = response.current
     const total = response.total
+    console.log(mails)
 
     commit('getInbox', { mails, current, total })
   },
@@ -98,12 +99,14 @@ const actions = {
     commit('getFolderMails', { mails, current, total, curFolderName })
   },
   async getFolders({ commit }, { token }) {
-    const folders = await api.folder.getFolders(token)
+    const res = await api.folder.getFolders(token)
+    const folders = res.folders
 
     commit('getFolders', folders)
   },
   async getAllContacts({ commit }, { token }) {
-    const currContacts = await api.contactsService.getContacts(token)
+    const res = await api.contactsService.getContacts(token)
+    const currContacts = res.contacts
 
     commit('getAllContacts', currContacts)
   },

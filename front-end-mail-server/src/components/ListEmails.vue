@@ -1,15 +1,15 @@
 <template>
   <div id="list-emails"></div>
-  <div v-for="email in emails" class="email-div" :key="email.id">
+  <div v-for="email in emails" class="email-div" :key="email.email_id">
     <input
       type="checkbox"
       v-model="selectedEmails"
-      @change="$emit('selectEmail', email.id)"
-      :value="email.id"
+      @change="$emit('selectEmail', email.email_id)"
+      :value="email.email_id"
       class="email-checkbox"
     />
 
-    <Email :email="email" :page="page" class="email-item" :key="email.id" />
+    <Email :email="email" :page="page" class="email-item" :key="email.email_id" />
   </div>
 </template>
 

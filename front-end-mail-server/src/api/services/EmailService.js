@@ -12,16 +12,24 @@ class EmailService {
 
   async sendEmail(formdata) {
     const service = ApiService.getInstance()
-    return await service.makeRequest('sendemail', 'POST', formdata, false, {})
-  }
 
+    const headers = {
+      Authorization: `Bearer ${formdata.get('token')}`,
+      'Content-Type': 'application/json'
+    }
+
+    return await service.makeRequest('email/send', 'POST', formdata, false, {})
+  }
+  // receivers
   async deleteEmail(token, id) {
     const service = ApiService.getInstance()
 
-    return await service.makeRequest('delete', 'DELETE', {
-      token,
-      id
-    })
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+
+    return await service.makeRequest(`email/delete?email_id=${id}`, 'DELETE', null, true, headers)
   }
 
   async draftEmail(formdata) {
@@ -45,20 +53,36 @@ class EmailService {
   async moveMail(token, id, foldername) {
     const service = ApiService.getInstance()
 
-    return await service.makeRequest('movemails', 'PUT', {
-      token,
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+    const body = {
       id,
       foldername
-    })
+    }
+
+    return await service.makeRequest(`folders/moveemail`, 'PUT', body, true, headers)
+    // return await service.makeRequest('movemails', 'PUT', {
+    //   token,
+    //   id,
+    //   foldername
+    // })
   }
 
   async restoreMail(token, id) {
     const service = ApiService.getInstance()
 
-    return await service.makeRequest('restore', 'PUT', {
-      token,
-      id
-    })
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+
+    return await service.makeRequest(`email/restore?email_id=${id}`, 'PUT', null, true, headers)
+    // return await service.makeRequest('email/restore', 'PUT', {
+    //   token,
+    //   id
+    // })
   }
 }
 

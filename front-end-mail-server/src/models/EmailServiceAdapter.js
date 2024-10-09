@@ -15,13 +15,13 @@ class EmailServiceAdapter extends EmailService {
     const files = email.files
 
     var formdata = new FormData()
-    formdata.append('token', `${token}`)
+    formdata.append('token', `Bearer ${token}`)
     formdata.append('body', `${body}`)
     formdata.append('priority', `${priority}`)
     formdata.append('subject', `${subject}`)
 
     for (let i = 0; i < receiver.length; ++i) {
-      formdata.append('receiver', `${receiver[i]}`)
+      formdata.append('receivers', `${receiver[i]}`)
     }
 
     for (let i = 0; i < files.length; ++i) {
@@ -53,7 +53,7 @@ class EmailServiceAdapter extends EmailService {
 
   async updateDraftEmail(email) {
     const token = store.getters.token
-    const id = email.id
+    const id = email.email_id
     const subject = email.subject
     const body = email.body
     const priority = email.priority
@@ -75,7 +75,7 @@ class EmailServiceAdapter extends EmailService {
 
   async submitDraftEmail(email) {
     const token = store.getters.token
-    const id = email.id
+    const id = email.email_id
     const receiver = email.receiver
     const subject = email.subject
     const body = email.body
@@ -90,7 +90,7 @@ class EmailServiceAdapter extends EmailService {
     formdata.append('subject', `${subject}`)
 
     for (let i = 0; i < receiver.length; ++i) {
-      formdata.append('receiver', `${receiver[i]}`)
+      formdata.append('receivers', `${receiver[i]}`)
     }
 
     for (let i = 0; i < files.length; ++i) {
